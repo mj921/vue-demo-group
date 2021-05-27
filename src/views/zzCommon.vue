@@ -1,12 +1,13 @@
 <template>
   <div class="zz">
-    <div class="cells" :style="{ top: length * 30 + 10 + 'px' }">
+    <div class="cells" :style="{ top: colLength * 30 + 10 + 'px' }">
       <dl
         class="row"
         v-for="(row, i) in cells"
         :key="`row-${i}`"
         :style="{
-          paddingLeft: ((length * 2 - 1 - row.length) * size) / 2 + 'px',
+          paddingLeft:
+            ((rowLength + colLength - 1 - row.length) * size) / 2 + 'px',
         }"
       >
         <dd
@@ -30,16 +31,17 @@
       </dl>
     </div>
     <div class="zzs">
-      <div class="heng" :style="{ top: length * 30 + 10 + 'px' }">
+      <div class="heng" :style="{ top: colLength * 30 + 10 + 'px' }">
         <dl
           v-for="(item, i) in zz.heng"
           :key="`heng-${i}`"
           :style="{
             marginRight:
-              -((length * 2 - 1 - cells[i].length) * size) / 2 + 'px',
+              -((rowLength + colLength - 1 - cells[i].length) * size) / 2 +
+              'px',
           }"
           :class="{
-            active: iptCell && iptCell.i === i + length,
+            active: iptCell && iptCell.i === i + rowLength,
             pass: checkHengPass(i),
           }"
         >
@@ -54,18 +56,18 @@
           :class="{
             active:
               iptCell &&
-              ((iptCell.i >= length * 2 - 1 &&
-                iptCell.j + Math.abs(iptCell.i - length * 2 + 1) ===
+              ((iptCell.i >= rowLength * 2 - 1 &&
+                iptCell.j + Math.abs(iptCell.i - rowLength * 2 + 1) ===
                   zz.zuoxie.length - i - 1) ||
-                (iptCell.i < length * 2 - 1 &&
+                (iptCell.i < rowLength * 2 - 1 &&
                   iptCell.j === zz.zuoxie.length - i - 1)),
             pass: checkZuoPass(i),
           }"
         >
           <i
-            v-if="i >= length - 1"
+            v-if="i >= rowLength - 1"
             :style="{
-              height: 30 * (i - length + 2) - 10 + 'px',
+              height: 30 * (i - rowLength + 2) - 10 + 'px',
               top: '10px',
               left: '-25px',
             }"
@@ -73,7 +75,10 @@
           {{ item }}
         </dl>
       </div>
-      <div class="youxie" :style="{ top: (length * 3 - 1) * 30 + 10 + 'px' }">
+      <div
+        class="youxie"
+        :style="{ top: (rowLength * 2 + colLength - 1) * 30 + 10 + 'px' }"
+      >
         <dl
           v-for="(item, i) in zz.youxie"
           :key="`youxie-${i}`"
@@ -81,17 +86,17 @@
           :class="{
             active:
               iptCell &&
-              ((iptCell.i >= length * 2 - 1 && iptCell.j === i) ||
-                (iptCell.i < length * 2 - 1 &&
-                  iptCell.j === i - length * 2 + 1 + iptCell.i)),
+              ((iptCell.i >= rowLength * 2 - 1 && iptCell.j === i) ||
+                (iptCell.i < rowLength * 2 - 1 &&
+                  iptCell.j === i - rowLength * 2 + 1 + iptCell.i)),
             pass: checkYouPass(i),
           }"
         >
           <i
-            v-if="i <= length - 1"
+            v-if="i <= colLength - 1"
             :style="{
-              height: (length - i - 0.5) * 30 + 10 + 'px',
-              top: (length - i - 0.5) * -30 + 1 + 'px',
+              height: (colLength - i - 0.5) * 30 + 10 + 'px',
+              top: (colLength - i - 0.5) * -30 + 1 + 'px',
               left: '-25px',
             }"
           ></i>
@@ -126,14 +131,19 @@ export default {
     }
     const zz = zzCommon[no] || zzCommon.find((item) => item.code === no);
     const code = zz.code || no;
-    const length = (zz.heng.length + 1) / 2;
+    const rowLength = (zz.heng.length + 1) / 2;
+    const colLength = zz.zuoxie.length + 1 - rowLength;
     if (cellMap[code]) {
       cells = cellMap[code];
     } else {
-      for (let i = length; i < 3 * length - 1; i++) {
+      for (let i = rowLength; i < 3 * rowLength - 1; i++) {
         const arr = [];
         for (
-          let j = 0, len = i < length * 2 ? i : length * 4 - 2 - i;
+          let j = 0,
+            len =
+              i < rowLength * 2
+                ? i + colLength - rowLength
+                : colLength + rowLength - 2 - (i - rowLength * 2);
           j < len;
           j++
         ) {
@@ -146,7 +156,8 @@ export default {
       cells,
       size: 3.4641 * 10,
       zz,
-      length,
+      rowLength,
+      colLength,
       code,
       iptCell: null,
     };
@@ -161,28 +172,34 @@ export default {
       localStorage.setItem("cellMap", JSON.stringify(cellMap));
     },
     getZuoStyle(i) {
-      if (i >= this.length - 1) {
+      if (i >= this.rowLength - 1) {
         return {
-          left: this.size * (this.length * 2.5 - 1 - i) + 1 + "px",
-          top: 30 * ((this.length - 1) * 2 - i) + "px",
+          left:
+            this.size * (this.rowLength * 1.5 + this.colLength - 1 - i) +
+            1 +
+            "px",
+          top: 30 * (this.colLength - 2 + this.rowLength - i) + "px",
         };
       }
       return {
-        left: this.size * (this.length * 2 - i / 2) - 10 + "px",
-        top: 30 * ((this.length - 1) * 2 - i) + 20 + "px",
+        left: this.size * (this.rowLength + this.colLength - i / 2) - 10 + "px",
+        top: 30 * (this.colLength + (this.rowLength - i - 1)) - 10 + "px",
       };
     },
     getYouStyle(i) {
-      if (i <= this.length - 1) {
+      if (i <= this.colLength - 1) {
         return {
-          left: (this.length / 2 + i) * this.size + 35 + "px",
-          top: 30 * (this.length - 0.5 - i) + "px",
+          left: (this.rowLength / 2 + i) * this.size + 35 + "px",
+          top: 30 * (this.colLength - i - 0.5) + "px",
         };
       }
       return {
         left:
-          (this.length * 1.5 + (i - this.length) / 2) * this.size + 20 + "px",
-        top: 30 * (this.length - 1 - i) - 12 + "px",
+          (this.rowLength / 2 + this.colLength + (i - this.colLength) / 2) *
+            this.size +
+          20 +
+          "px",
+        top: -30 * (i - this.colLength + 1) - 10 + "px",
       };
     },
     checkHengPass(index) {
@@ -206,13 +223,16 @@ export default {
       index = this.zz.zuoxie.length - index - 1;
       const arr = [];
       for (
-        let i = index < this.length ? 0 : index - this.length + 1,
-          len = index < this.length ? this.length + index : this.length * 2 - 1;
+        let i = index < this.colLength ? 0 : index - this.colLength + 1,
+          len =
+            index < this.rowLength
+              ? this.rowLength + index
+              : this.rowLength * 2 - 1;
         i < len;
         i++
       ) {
         const item = this.cells[i][
-          i < this.length ? index : index - (i + 1 - this.length)
+          i < this.colLength ? index : index - (i + 1 - this.rowLength)
         ];
         if (
           typeof item.val !== "string" ||
@@ -229,14 +249,16 @@ export default {
     checkYouPass(index) {
       const arr = [];
       for (
-        let i = index < this.length ? 0 : index - this.length + 1,
-          len = index < this.length ? this.length + index : this.length * 2 - 1;
+        let i = index < this.colLength ? this.rowLength - index - 1 : 0,
+          len =
+            index < this.colLength
+              ? this.rowLength * 2 - 1
+              : this.rowLength * 2 - 1 - (index - this.colLength + 1);
         i < len;
         i++
       ) {
-        const n = this.length * 2 - 2 - i;
-        const item = this.cells[this.length * 2 - 2 - i][
-          n < this.length ? n + 1 - this.length + index : index
+        const item = this.cells[i][
+          i < this.rowLength - 1 ? index - (this.rowLength - i - 1) : index
         ];
         if (
           typeof item.val !== "string" ||
@@ -245,7 +267,7 @@ export default {
         ) {
           return false;
         }
-        arr.push(item.val);
+        arr.unshift(item.val);
       }
       const str = arr.join("");
       return new RegExp("^" + this.zz.youxie[index] + "$").test(str);
