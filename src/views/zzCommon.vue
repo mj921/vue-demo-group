@@ -232,7 +232,7 @@ export default {
         i++
       ) {
         const item = this.cells[i][
-          i < this.colLength ? index : index - (i + 1 - this.rowLength)
+          i < this.rowLength ? index : index - (i + 1 - this.rowLength)
         ];
         if (
           typeof item.val !== "string" ||
@@ -249,7 +249,7 @@ export default {
     checkYouPass(index) {
       const arr = [];
       for (
-        let i = index < this.colLength ? this.rowLength - index - 1 : 0,
+        let i = index < this.rowLength ? this.rowLength - index - 1 : 0,
           len =
             index < this.colLength
               ? this.rowLength * 2 - 1
