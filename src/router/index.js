@@ -11,6 +11,10 @@ import zz1 from "../views/zz1.vue";
 import zzCommon from "../views/zzCommon.vue";
 import zztransform from "../views/zztransform.vue";
 import shengwu from "../views/shengwu.vue";
+import shengwu1 from "../views/shengwu1.vue";
+import cc from "../views/cc.vue";
+import zm from "../views/zm.vue";
+import xiuxian from "../views/xiuxian.vue";
 
 Vue.use(VueRouter);
 
@@ -64,6 +68,26 @@ const routes = [
     path: "/shengwu",
     name: "shengwu",
     component: shengwu,
+  },
+  {
+    path: "/shengwu1",
+    name: "shengwu1",
+    component: shengwu1,
+  },
+  {
+    path: "/cc",
+    name: "cc",
+    component: cc,
+  },
+  {
+    path: "/zm",
+    name: "zm",
+    component: zm,
+  },
+  {
+    path: "/xiuxian",
+    name: "xiuxian",
+    component: xiuxian,
   },
   {
     path: "/about",
