@@ -56,16 +56,28 @@ const routes = [
     path: "/zz",
     name: "zz",
     component: zz,
+    homeShow: true,
+    meta: {
+      title: "正则游戏",
+    },
   },
   {
     path: "/zz1",
     name: "zz1",
     component: zz1,
+    homeShow: true,
+    meta: {
+      title: "正则游戏2",
+    },
   },
   {
     path: "/zzCommon",
     name: "zzCommon",
     component: zzCommon,
+    homeShow: true,
+    meta: {
+      title: "正则游戏3",
+    },
   },
   {
     path: "/zztransform",
@@ -121,19 +133,29 @@ const routes = [
     path: "/restaurantGame",
     name: "restaurantGame",
     component: restaurantGame,
+    homeShow: true,
     meta: {
       h5: true,
+      title: "餐厅游戏",
     },
   },
   {
     path: "/caichengyu",
     name: "caichengyu",
     component: pyGuessIdioms,
+    homeShow: true,
+    meta: {
+      title: "拼音猜成语",
+    },
   },
   {
     path: "/caichengyu1",
     name: "caichengyu1",
     component: pyGuessIdiomsCy,
+    homeShow: true,
+    meta: {
+      title: "拼音猜成语2",
+    },
   },
   {
     path: "/treeImg",
@@ -176,5 +198,5 @@ router.beforeEach((to, from, next) => {
   }
   next();
 });
-
+router.myRoutes = routes;
 export default router;
