@@ -15,6 +15,14 @@ import shengwu1 from "../views/shengwu1.vue";
 import cc from "../views/cc.vue";
 import zm from "../views/zm.vue";
 import xiuxian from "../views/xiuxian.vue";
+import pubuliu from "../views/pubuliu.vue";
+import sku from "../views/sku.vue";
+import x6antv from "../views/x6antv.vue";
+import xiagu from "../views/xiagu.vue";
+import restaurantGame from "../views/restaurantGame/index.vue";
+import pyGuessIdioms from "../views/pyGuessIdioms/index.vue";
+import pyGuessIdiomsCy from "../views/pyGuessIdioms/chengyu.vue";
+import { setRem } from "../util/dom";
 
 Vue.use(VueRouter);
 
@@ -90,6 +98,50 @@ const routes = [
     component: xiuxian,
   },
   {
+    path: "/xiagu",
+    name: "xiagu",
+    component: xiagu,
+  },
+  {
+    path: "/pubuliu",
+    name: "pubuliu",
+    component: pubuliu,
+  },
+  {
+    path: "/sku",
+    name: "sku",
+    component: sku,
+  },
+  {
+    path: "/x6antv",
+    name: "x6antv",
+    component: x6antv,
+  },
+  {
+    path: "/restaurantGame",
+    name: "restaurantGame",
+    component: restaurantGame,
+    meta: {
+      h5: true,
+    },
+  },
+  {
+    path: "/caichengyu",
+    name: "caichengyu",
+    component: pyGuessIdioms,
+  },
+  {
+    path: "/caichengyu1",
+    name: "caichengyu1",
+    component: pyGuessIdiomsCy,
+  },
+  {
+    path: "/treeImg",
+    name: "treeImg",
+    component: () =>
+      import(/* webpackChunkName: "treeImg" */ "../views/treeImg.vue"),
+  },
+  {
     path: "/about",
     name: "About",
     // route level code-splitting
@@ -97,6 +149,11 @@ const routes = [
     // which is lazy-loaded when the route is visited.
     component: () =>
       import(/* webpackChunkName: "about" */ "../views/About.vue"),
+  },
+  {
+    path: "/demo",
+    name: "Demo",
+    component: () => import("../views/demo.vue"),
   },
   {
     path: "/",
@@ -107,6 +164,17 @@ const routes = [
 
 const router = new VueRouter({
   routes,
+});
+
+router.beforeEach((to, from, next) => {
+  if ((!from.meta || !from.meta.h5) && to.meta && to.meta.h5) {
+    setRem();
+    window.addEventListener("resize", setRem);
+  }
+  if ((!to.meta || !to.meta.h5) && from.meta && from.meta.h5) {
+    window.removeEventListener("resize", setRem);
+  }
+  next();
 });
 
 export default router;
