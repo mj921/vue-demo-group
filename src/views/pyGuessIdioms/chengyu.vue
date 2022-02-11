@@ -40,7 +40,7 @@
           >
         </dd>
       </dl>
-      <dl class="cy-row" v-show="!finish">
+      <dl class="cy-row" v-show="!finish" @click="inputClick">
         <div class="cy-row-num">{{ inputRecords.length + 1 }}</div>
         <dd
           class="cy-cell cy-cell-input"
@@ -67,6 +67,7 @@
       <dl class="cy-row">
         <input
           class="answer-input"
+          ref="input"
           type="text"
           placeholder="输入四字词语"
           v-model="currIpt"
@@ -275,6 +276,9 @@ export default {
         obj[el] = "";
         return obj;
       }, {});
+    },
+    inputClick() {
+      this.$refs.input && this.$refs.input.focus();
     },
     textToPy(text) {
       return pinyin(text, {
