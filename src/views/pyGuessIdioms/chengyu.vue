@@ -14,30 +14,59 @@
       >
         <div class="cy-row-num">{{ rowIndex + 1 }}</div>
         <dd
-          class="cy-cell"
-          :class="{
-            'cy-cell-pass': inputCell && inputCell.validResult,
-          }"
+          class="cy-cell-group"
           v-for="(inputCell, cellIndex) in record"
           :key="`cell-${rowIndex}-${cellIndex}`"
         >
-          <template v-if="inputCell">
-            <div class="cy-py">
-              <span
-                v-for="(zm, zmIndex) in inputCell.zms"
-                class="cy-zm"
-                :key="`${zm.zm}-${cellIndex}-${zmIndex}`"
-                :class="`cy-zm-${zm.sd || ''}  cy-zm-${
-                  zm.smFlag ? inputCell.smResult : inputCell.ymResult
-                } cy-sd-${inputCell.sdResult}`"
-              >
-                {{ zm.zm }}
-              </span>
-            </div>
-            <div class="cy-text">
-              {{ inputCell.text }}
-            </div></template
+          <div
+            class="cy-cell cy-cell-input cy-cell-absolute cy-cell-cellrotate1"
+            :style="{
+              animationDelay: `${cellIndex === 0 ? 0 : 0.4 * cellIndex}s`,
+            }"
           >
+            <template v-if="inputCell">
+              <div class="cy-py">
+                <span
+                  v-for="(zm, zmIndex) in inputCell.zms"
+                  class="cy-zm"
+                  :key="`${zm.zm}-${cellIndex}-${zmIndex}`"
+                  :class="`cy-zm-${zm.sd || ''}`"
+                >
+                  {{ zm.zm }}
+                </span>
+              </div>
+              <div class="cy-text">
+                {{ inputCell.text }}
+              </div></template
+            >
+          </div>
+          <div
+            class="cy-cell cy-cell-absolute cy-cell-cellrotate"
+            :class="{
+              'cy-cell-pass': inputCell && inputCell.validResult,
+            }"
+            :style="{
+              animationDelay: `${cellIndex === 0 ? 0 : 0.4 * cellIndex}s`,
+            }"
+          >
+            <template v-if="inputCell">
+              <div class="cy-py">
+                <span
+                  v-for="(zm, zmIndex) in inputCell.zms"
+                  class="cy-zm"
+                  :key="`${zm.zm}-${cellIndex}-${zmIndex}`"
+                  :class="`cy-zm-${zm.sd || ''}  cy-zm-${
+                    zm.smFlag ? inputCell.smResult : inputCell.ymResult
+                  } cy-sd-${inputCell.sdResult}`"
+                >
+                  {{ zm.zm }}
+                </span>
+              </div>
+              <div class="cy-text">
+                {{ inputCell.text }}
+              </div></template
+            >
+          </div>
         </dd>
       </dl>
       <dl class="cy-row" v-show="!finish" @click="inputClick">
@@ -99,7 +128,7 @@
         </dl>
         <dl>
           <label for="">获胜次数</label>
-          <span>{{ history.gameWinNum }}</span>
+          <span>{{ history.gameWinNum }} （尝试次数小于等于10次）</span>
         </dl>
         <dl>
           <label for="">获胜几率</label>
@@ -137,30 +166,38 @@
       class="tip-dialog"
     >
       <div class="tip-content">
-        <dl class="tip-shengmu">
-          <dt>声母</dt>
-          <ul class="tip-shengmu-list">
-            <li
-              v-for="key in Object.keys(shengmuMap)"
-              :key="`shengmutip-${key}`"
-              :class="`tip-shengmu-${shengmuMap[key]}`"
-            >
-              {{ key }}
-            </li>
-          </ul>
-        </dl>
-        <dl class="tip-yunmu">
-          <dt>韵母</dt>
-          <ul class="tip-yunmu-list">
-            <li
-              v-for="key in Object.keys(yunmuMap)"
-              :key="`yunmutip-${key}`"
-              :class="`tip-yunmu-${yunmuMap[key]}`"
-            >
-              {{ key }}
-            </li>
-          </ul>
-        </dl>
+        <div class="tip-list">
+          <dl class="tip-shengmu">
+            <dt>声母</dt>
+            <ul class="tip-shengmu-list">
+              <li
+                v-for="key in Object.keys(shengmuMap)"
+                :key="`shengmutip-${key}`"
+                :class="`tip-shengmu-${shengmuMap[key]}`"
+              >
+                {{ key }}
+              </li>
+            </ul>
+          </dl>
+          <dl class="tip-yunmu">
+            <dt>韵母</dt>
+            <ul class="tip-yunmu-list">
+              <li
+                v-for="key in Object.keys(yunmuMap)"
+                :key="`yunmutip-${key}`"
+                :class="`tip-yunmu-${yunmuMap[key]}`"
+              >
+                {{ key }}
+              </li>
+            </ul>
+          </dl>
+        </div>
+        已经正确的
+        <div class="tip-pass">
+          <dl v-for="(passTip, pIndex) in passTips" :key="`passTip${pIndex}`">
+            {{ passTip.sm }}{{ passTip.ym }} {{ passTip.sd }}
+          </dl>
+        </div>
       </div>
     </el-dialog>
   </div>
@@ -229,6 +266,12 @@ export default {
       shengmuMap: {},
       tipVisible: false,
       winGuessNum: 10,
+      passTips: [
+        { sm: "", ym: "", sd: "" },
+        { sm: "", ym: "", sd: "" },
+        { sm: "", ym: "", sd: "" },
+        { sm: "", ym: "", sd: "" },
+      ],
     };
   },
   computed: {
@@ -276,6 +319,12 @@ export default {
         obj[el] = "";
         return obj;
       }, {});
+      this.passTips = [
+        { sm: "", ym: "", sd: "" },
+        { sm: "", ym: "", sd: "" },
+        { sm: "", ym: "", sd: "" },
+        { sm: "", ym: "", sd: "" },
+      ];
     },
     inputClick() {
       this.$refs.input && this.$refs.input.focus();
@@ -330,6 +379,11 @@ export default {
             this.$set(el, "validResult", true);
             this.shengmuMap[el.sm] = "pass";
             this.yunmuMap[el.ym] = "pass";
+            this.passTips[index] = {
+              sm: trueEl.sm,
+              ym: trueEl.ym,
+              sd: trueEl.sd,
+            };
             passNum++;
           } else {
             this.$set(el, "validResult", false);
@@ -345,6 +399,9 @@ export default {
             if (this.shengmuMap[el.sm] !== "pass") {
               this.shengmuMap[el.sm] = el.smResult;
             }
+            if (el.smResult === "pass") {
+              this.passTips[index].sm = trueEl.sm;
+            }
             this.$set(
               el,
               "ymResult",
@@ -357,6 +414,9 @@ export default {
             if (this.yunmuMap[el.ym] !== "pass") {
               this.yunmuMap[el.ym] = el.ymResult;
             }
+            if (el.ymResult === "pass") {
+              this.passTips[index].ym = trueEl.ym;
+            }
             this.$set(
               el,
               "sdResult",
@@ -366,6 +426,9 @@ export default {
                 ? "has"
                 : "error"
             );
+            if (el.sdResult === "pass") {
+              this.passTips[index].sd = trueEl.sd;
+            }
           }
         });
         this.inputRecords.push(this.currCyPy);
@@ -401,6 +464,46 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@keyframes cellrotate {
+  0% {
+    transform: rotateY(180deg);
+    z-index: 0;
+    opacity: 0;
+  }
+  49% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    transform: rotateY(0);
+    z-index: 1;
+    opacity: 1;
+  }
+}
+@keyframes cellrotate1 {
+  0% {
+    transform: rotateY(0);
+    z-index: 1;
+    opacity: 1;
+    border-color: rgba($color: #333, $alpha: 0.1);
+  }
+  49% {
+    opacity: 1;
+    border-color: rgba($color: #333, $alpha: 0.1);
+  }
+  50% {
+    opacity: 0;
+    border-color: transparent;
+  }
+  100% {
+    transform: rotateY(180deg);
+    z-index: 0;
+    opacity: 0;
+    border-color: transparent;
+  }
+}
 .cy-pinyin {
   padding: 0;
   display: flex;
@@ -445,6 +548,7 @@ export default {
         user-select: none;
         color: #718096;
         border: 2px solid transparent;
+        transition: transform 0.6s;
         &.cy-cell-input {
           background-color: #fff;
           border: 2px solid rgba($color: #333, $alpha: 0.1);
@@ -517,6 +621,28 @@ export default {
           }
         }
       }
+      .cy-cell-group {
+        position: relative;
+        width: 80px;
+        height: 80px;
+        &:not(:last-child) {
+          margin-right: 8px;
+        }
+        .cy-cell-absolute {
+          position: absolute;
+          left: 0;
+          top: 0;
+          margin-right: 0;
+          &.cy-cell-cellrotate {
+            animation: cellrotate 0.6s;
+            animation-fill-mode: both;
+          }
+          &.cy-cell-cellrotate1 {
+            animation: cellrotate1 0.6s;
+            animation-fill-mode: both;
+          }
+        }
+      }
       &.error {
         .cy-cell {
           border: 5px solid red;
@@ -579,49 +705,59 @@ export default {
     }
   }
   .tip-content {
-    display: flex;
-    text-align: center;
-    .tip-shengmu {
-      width: 40%;
-      .tip-shengmu-list {
-        display: flex;
-        flex-wrap: wrap;
-        li {
-          width: 50%;
-          list-style: none;
-          margin-bottom: 10px;
-          &.tip-shengmu-pass {
-            color: #409eff;
-            font-weight: bold;
+    .tip-list {
+      display: flex;
+      text-align: center;
+      .tip-shengmu {
+        width: 40%;
+        .tip-shengmu-list {
+          display: flex;
+          flex-wrap: wrap;
+          li {
+            width: 50%;
+            list-style: none;
+            margin-bottom: 5px;
+            &.tip-shengmu-pass {
+              color: #409eff;
+              font-weight: bold;
+            }
+            &.tip-shengmu-has {
+              color: orange;
+            }
+            &.tip-shengmu-error {
+              color: #ccc;
+            }
           }
-          &.tip-shengmu-has {
-            color: orange;
-          }
-          &.tip-shengmu-error {
-            color: #ccc;
+        }
+      }
+      .tip-yunmu {
+        width: 60%;
+        .tip-yunmu-list {
+          display: flex;
+          flex-wrap: wrap;
+          li {
+            width: 33%;
+            list-style: none;
+            margin-bottom: 5px;
+            &.tip-yunmu-pass {
+              color: #0a1cf0;
+            }
+            &.tip-yunmu-has {
+              color: orange;
+            }
+            &.tip-yunmu-error {
+              color: #ccc;
+            }
           }
         }
       }
     }
-    .tip-yunmu {
-      width: 60%;
-      .tip-yunmu-list {
-        display: flex;
-        flex-wrap: wrap;
-        li {
-          width: 33%;
-          list-style: none;
-          margin-bottom: 10px;
-          &.tip-yunmu-pass {
-            color: #0a1cf0;
-          }
-          &.tip-yunmu-has {
-            color: orange;
-          }
-          &.tip-yunmu-error {
-            color: #ccc;
-          }
-        }
+    .tip-pass {
+      display: flex;
+      height: 20px;
+      dl {
+        width: 25%;
+        text-align: center;
       }
     }
   }
