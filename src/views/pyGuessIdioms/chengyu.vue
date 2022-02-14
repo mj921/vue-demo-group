@@ -195,7 +195,11 @@
         已经正确的
         <div class="tip-pass">
           <dl v-for="(passTip, pIndex) in passTips" :key="`passTip${pIndex}`">
-            {{ passTip.sm }}{{ passTip.ym }} {{ passTip.sd }}
+            {{
+              passTip.text
+                ? passTip.text
+                : `${passTip.sm}${passTip.ym} ${passTip.sd}`
+            }}
           </dl>
         </div>
       </div>
@@ -383,6 +387,7 @@ export default {
               sm: trueEl.sm,
               ym: trueEl.ym,
               sd: trueEl.sd,
+              text: trueEl.text,
             };
             passNum++;
           } else {
