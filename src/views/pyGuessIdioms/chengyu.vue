@@ -42,9 +42,7 @@
           </div>
           <div
             class="cy-cell cy-cell-absolute cy-cell-cellrotate"
-            :class="{
-              'cy-cell-pass': inputCell && inputCell.validResult,
-            }"
+            :class="`cy-cell-${inputCell && inputCell.validResult}`"
             :style="{
               animationDelay: `${cellIndex === 0 ? 0 : 0.4 * cellIndex}s`,
             }"
@@ -380,7 +378,7 @@ export default {
           const trueEl = this.cyPinYin[index];
           if (el.text === trueEl.text) {
             el.validResult = true;
-            this.$set(el, "validResult", true);
+            this.$set(el, "validResult", "pass");
             this.shengmuMap[el.sm] = "pass";
             this.yunmuMap[el.ym] = "pass";
             this.passTips[index] = {
@@ -391,7 +389,11 @@ export default {
             };
             passNum++;
           } else {
-            this.$set(el, "validResult", false);
+            this.$set(
+              el,
+              "validResult",
+              this.cy.includes(el.text) ? "has" : "error"
+            );
             this.$set(
               el,
               "smResult",
@@ -623,6 +625,11 @@ export default {
           color: #fff;
           .cy-zm::before {
             color: #fff !important;
+          }
+        }
+        &.cy-cell-has {
+          .cy-text {
+            color: orange;
           }
         }
       }
