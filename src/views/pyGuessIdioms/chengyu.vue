@@ -200,6 +200,50 @@
             }}
           </dl>
         </div>
+        <el-button type="text" @click="moreTipVisible = true">更多</el-button>
+      </div>
+    </el-dialog>
+    <el-dialog
+      title="更多提示"
+      :visible.sync="moreTipVisible"
+      width="500px"
+      top="6vh"
+      class="tip-dialog"
+    >
+      <div class="tip-content">
+        <ul class="tip-pinyin-list">
+          <li
+            v-for="pyData in pinyinData"
+            :key="`pinyintip-${pyData.py}`"
+            :class="`tip-pinyin-${
+              shengmuMap[pyData.sm] === 'error' ||
+              yunmuMap[pyData.ym] === 'error'
+                ? 'error'
+                : ''
+            }`"
+          >
+            <span
+              :class="`tip-pinyin-${
+                shengmuMap[pyData.sm] === 'error'
+                  ? 'error'
+                  : shengmuMap[pyData.sm]
+                  ? 'has'
+                  : ''
+              }`"
+              >{{ pyData.sm }}</span
+            >
+            <span
+              :class="`tip-pinyin-${
+                yunmuMap[pyData.ym] === 'error'
+                  ? 'error'
+                  : yunmuMap[pyData.ym]
+                  ? 'has'
+                  : ''
+              }`"
+              >{{ pyData.ym }}</span
+            >
+          </li>
+        </ul>
       </div>
     </el-dialog>
   </div>
@@ -210,6 +254,7 @@ import pinyin from "pinyin";
 import chengyuData from "./data/cyData.json";
 import shengmuData from "./data/shengmu.json";
 import yunmuData from "./data/yunmu.json";
+import pinyinData from "./data/pinyin.json";
 const chengyudata = chengyuData.reduce((arr, el) => {
   if (el.type === 1) {
     return arr.concat([el.data]);
@@ -267,6 +312,7 @@ export default {
       yunmuMap: {},
       shengmuMap: {},
       tipVisible: false,
+      moreTipVisible: false,
       winGuessNum: 10,
       passTips: [
         { sm: "", ym: "", sd: "" },
@@ -274,6 +320,7 @@ export default {
         { sm: "", ym: "", sd: "" },
         { sm: "", ym: "", sd: "" },
       ],
+      pinyinData,
     };
   },
   computed: {
@@ -761,6 +808,34 @@ export default {
               color: #ccc;
             }
           }
+        }
+      }
+    }
+    .tip-pinyin-list {
+      display: flex;
+      flex-wrap: wrap;
+      li {
+        width: 16%;
+        list-style: none;
+        margin-bottom: 5px;
+        text-align: center;
+        &.tip-pinyin-pass {
+          color: #0a1cf0;
+        }
+        &.tip-pinyin-has {
+          color: orange;
+        }
+        &.tip-pinyin-error {
+          color: #ccc;
+        }
+        .tip-pinyin-pass {
+          color: #0a1cf0;
+        }
+        .tip-pinyin-has {
+          color: orange;
+        }
+        .tip-pinyin-error {
+          color: #ccc;
         }
       }
     }
