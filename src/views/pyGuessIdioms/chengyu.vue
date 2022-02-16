@@ -819,14 +819,8 @@ export default {
         list-style: none;
         margin-bottom: 5px;
         text-align: center;
-        &.tip-pinyin-pass {
-          color: #0a1cf0;
-        }
-        &.tip-pinyin-has {
-          color: orange;
-        }
-        &.tip-pinyin-error {
-          color: #ccc;
+        &.tip-pinyin-error span {
+          color: #ccc !important;
         }
         .tip-pinyin-pass {
           color: #0a1cf0;
