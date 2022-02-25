@@ -541,11 +541,11 @@ export default {
     transform: rotateY(0);
     z-index: 1;
     opacity: 1;
-    border-color: rgba($color: #333, $alpha: 0.1);
+    border-color: rgba(107, 114, 128, 0.1);
   }
   49% {
     opacity: 1;
-    border-color: rgba($color: #333, $alpha: 0.1);
+    border-color: rgba(107, 114, 128, 0.1);
   }
   50% {
     opacity: 0;
@@ -605,7 +605,7 @@ export default {
         transition: transform 0.6s;
         &.cy-cell-input {
           background-color: #fff;
-          border: 2px solid rgba($color: #333, $alpha: 0.1);
+          border: 2px solid rgba(107, 114, 128, 0.1);
         }
         .cy-py {
           padding-top: 8px;
@@ -715,7 +715,7 @@ export default {
       width: 344px;
       height: 52px;
       text-align: center;
-      border: 2px solid rgba($color: #333, $alpha: 0.1);
+      border: 2px solid rgba(107, 114, 128, 0.1);
       font-size: 18px;
       outline: royalblue;
     }
