@@ -154,6 +154,32 @@
           <label for="">最少尝试次数</label>
           <span>{{ history.minGuessNum }}</span>
         </dl>
+        <el-button
+          type="text"
+          size="default"
+          @click="guessNumMoreVisible = !guessNumMoreVisible"
+          >{{ guessNumMoreVisible ? "收起" : "展开" }}</el-button
+        >
+        <dl
+          v-for="guessNumKey in Object.keys(history.guessNumMap)"
+          :key="`guessNumKey-${guessNumKey}`"
+          v-show="guessNumMoreVisible || +guessNumKey < 11"
+        >
+          <span class="bar-text" style="text-align: right">
+            {{ guessNumKey }}
+          </span>
+          <div class="bar-bg">
+            <div
+              class="bar-curr"
+              :style="{
+                width: `${
+                  (history.guessNumMap[guessNumKey] / maxGuessNumVolumn) * 100
+                }%`,
+              }"
+            ></div>
+          </div>
+          <span class="bar-text">{{ history.guessNumMap[guessNumKey] }}</span>
+        </dl>
       </div>
     </el-dialog>
     <el-dialog
@@ -321,11 +347,20 @@ export default {
         { sm: "", ym: "", sd: "" },
       ],
       pinyinData,
+      guessNumMoreVisible: false,
     };
   },
   computed: {
     currIptCy() {
       return this.currIpt.replace(/[^\u4e00-\u9fa5]/g, "").slice(0, 4);
+    },
+    maxGuessNumVolumn() {
+      return Math.max.apply(
+        null,
+        Object.keys(this.history.guessNumMap).map(
+          (key) => this.history.guessNumMap[key]
+        )
+      );
     },
   },
   watch: {
@@ -503,9 +538,13 @@ export default {
       if (this.history.maxGuessNum < num) this.history.maxGuessNum = num;
       if (this.history.minGuessNum > num) this.history.minGuessNum = num;
       if (this.history.guessNumMap[num]) {
-        this.history.guessNumMap[num]++;
+        this.$set(
+          this.history.guessNumMap,
+          num,
+          this.history.guessNumMap[num] + 1
+        );
       } else {
-        this.history.guessNumMap[num] = 0;
+        this.$set(this.history.guessNumMap, num, 1);
       }
       localStorage.setItem("cyHistory1", JSON.stringify(this.history));
     },
@@ -541,11 +580,11 @@ export default {
     transform: rotateY(0);
     z-index: 1;
     opacity: 1;
-    border-color: rgba($color: #333, $alpha: 0.1);
+    border-color: rgba(107, 114, 128, 0.1);
   }
   49% {
     opacity: 1;
-    border-color: rgba($color: #333, $alpha: 0.1);
+    border-color: rgba(107, 114, 128, 0.1);
   }
   50% {
     opacity: 0;
@@ -605,7 +644,7 @@ export default {
         transition: transform 0.6s;
         &.cy-cell-input {
           background-color: #fff;
-          border: 2px solid rgba($color: #333, $alpha: 0.1);
+          border: 2px solid rgba(107, 114, 128, 0.1);
         }
         .cy-py {
           padding-top: 8px;
@@ -715,7 +754,7 @@ export default {
       width: 344px;
       height: 52px;
       text-align: center;
-      border: 2px solid rgba($color: #333, $alpha: 0.1);
+      border: 2px solid rgba(107, 114, 128, 0.1);
       font-size: 18px;
       outline: royalblue;
     }
@@ -743,9 +782,22 @@ export default {
     }
   }
   .statistics {
+    .bar-text {
+      width: 8%;
+    }
+    .bar-bg {
+      height: 10px;
+      width: 75%;
+      margin: 0 16px;
+      .bar-curr {
+        height: 100%;
+        background-color: #38a169;
+      }
+    }
     dl {
       margin-bottom: 10px;
       display: flex;
+      align-items: center;
       label {
         width: 6em;
         text-align: right;
