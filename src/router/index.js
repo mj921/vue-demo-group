@@ -22,6 +22,7 @@ import xiagu from "../views/xiagu.vue";
 import restaurantGame from "../views/restaurantGame/index.vue";
 import pyGuessIdioms from "../views/pyGuessIdioms/index.vue";
 import pyGuessIdiomsCy from "../views/pyGuessIdioms/chengyu.vue";
+import clearStore from "../views/clearStore.vue";
 import { setRem } from "../util/dom";
 
 Vue.use(VueRouter);
@@ -155,6 +156,15 @@ const routes = [
     homeShow: true,
     meta: {
       title: "拼音猜成语2",
+    },
+  },
+  {
+    path: "/clearStore",
+    name: "clearStore",
+    component: clearStore,
+    homeShow: true,
+    meta: {
+      title: "清缓存",
     },
   },
   {
