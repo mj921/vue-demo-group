@@ -23,6 +23,7 @@ import restaurantGame from "../views/restaurantGame/index.vue";
 import pyGuessIdioms from "../views/pyGuessIdioms/index.vue";
 import pyGuessIdiomsCy from "../views/pyGuessIdioms/chengyu.vue";
 import clearStore from "../views/clearStore.vue";
+import roguelike from "../views/roguelike/index.vue";
 import { setRem } from "../util/dom";
 
 Vue.use(VueRouter);
@@ -165,6 +166,15 @@ const routes = [
     homeShow: true,
     meta: {
       title: "清缓存",
+    },
+  },
+  {
+    path: "/roguelike",
+    name: "roguelike",
+    component: roguelike,
+    homeShow: true,
+    meta: {
+      title: "roguelike",
     },
   },
   {
