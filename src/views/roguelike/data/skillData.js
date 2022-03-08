@@ -29,10 +29,12 @@ export const EffectType = {
   RESTORE_HP: 4,
   /** 概率回血 */
   PROBABILITY_RESTORE_HP: 5,
+  /** 条件回血 */
+  CONDITION_RESTORE_HP: 6,
   /** 减伤 */
-  REDUCTION_DAMAGE: 6,
+  REDUCTION_DAMAGE: 7,
   /** 概率减伤 */
-  PROBABILITY_REDUCTION_DAMAGE: 7,
+  PROBABILITY_REDUCTION_DAMAGE: 8,
 };
 export const TargetType = {
   /** 自身  */
@@ -156,6 +158,47 @@ export const skillData = [
       const { lv = 1 } = this;
       const { probability, reductionDamage } = this.effects[0];
       return `受到攻击时${probability}%概率减免${lv * reductionDamage}点伤害`;
+    },
+  },
+  {
+    id: 6,
+    name: "",
+    skillType: SkillType.BATTLE_TRIGGER,
+    effects: [
+      {
+        triggerType: TriggerType.TIME_INTERVAL,
+        effectType: EffectType.RESTORE_HP,
+        targetType: TargetType.SELF,
+        restoreHp: 30,
+        intervalTime: 1000,
+      },
+    ],
+    maxLv: 0,
+    desc: function () {
+      const { lv = 1 } = this;
+      const { restoreHp } = this.effects[0];
+      return `每秒回复${lv * restoreHp}点血量`;
+    },
+  },
+  {
+    id: 7,
+    name: "",
+    skillType: SkillType.BATTLE_TRIGGER,
+    effects: [
+      {
+        triggerType: TriggerType.TIME_INTERVAL,
+        effectType: EffectType.CONDITION_RESTORE_HP,
+        targetType: TargetType.SELF,
+        restoreHp: 42,
+        intervalTime: 1000,
+        condition: "(hp/maxHp)>0.5",
+      },
+    ],
+    maxLv: 0,
+    desc: function () {
+      const { lv = 1 } = this;
+      const { restoreHp } = this.effects[0];
+      return `当生命值大于50%时，每秒回复${lv * restoreHp}点血量`;
     },
   },
 ];

@@ -5,6 +5,7 @@ import {
   TargetType,
   EffectType,
 } from "../data/skillData";
+import { executeCondition, parseCondition } from "./ExpressionUtil";
 import GameEvent from "./GameEvent";
 
 class Character {
@@ -34,28 +35,41 @@ class Character {
   /** 处理战斗技能 */
   dealBattleSkills(skill, currProps) {
     skill.effects.forEach((effect) => {
+      let obj = {};
       switch (effect.triggerType) {
         case TriggerType.TIME_ONCE:
-          currProps.onceEffects.push({
+          obj = {
             ...effect,
             lv: skill.lv,
             skillId: skill.id,
-          });
+          };
+          if (effect.condition) {
+            obj.condition = parseCondition(effect.condition);
+          }
+          currProps.onceEffects.push(obj);
           break;
         case TriggerType.TIME_INTERVAL:
-          currProps.intervalEffects.push({
+          obj = {
             ...effect,
             lv: skill.lv,
             timeProcess: 0,
             skillId: skill.id,
-          });
+          };
+          if (effect.condition) {
+            obj.condition = parseCondition(effect.condition);
+          }
+          currProps.intervalEffects.push(obj);
           break;
         case TriggerType.UNDER_ATTACK:
-          currProps.underAttackEffects.push({
+          obj = {
             ...effect,
             lv: skill.lv,
             skillId: skill.id,
-          });
+          };
+          if (effect.condition) {
+            obj.condition = parseCondition(effect.condition);
+          }
+          currProps.underAttackEffects.push(obj);
           break;
       }
     });
@@ -111,6 +125,14 @@ class Character {
         break;
     }
   }
+  /** 回复血量 */
+  restoreHp(hp) {
+    this.addBattleRecord({
+      recordType: Character.RecordType.RESTORE_HP,
+      restoreHp: hp,
+    });
+    this.currProps.hp = Math.min(this.currProps.maxHp, this.currProps.hp + hp);
+  }
   /** 触发效果 */
   triggerEffect(enemy, time, loopTime) {
     for (let i = 0; i < this.currProps.onceEffects.length; ) {
@@ -132,6 +154,14 @@ class Character {
         switch (effect.effectType) {
           case EffectType.PROP:
             this.triggerPropEffect(enemy, effect);
+            break;
+          case EffectType.RESTORE_HP:
+            this.restoreHp(effect.restoreHp * effect.lv);
+            break;
+          case EffectType.CONDITION_RESTORE_HP:
+            if (executeCondition(this.currProps, effect.condition)) {
+              this.restoreHp(effect.restoreHp * effect.lv);
+            }
             break;
         }
         effect.timeProcess -= effect.intervalTime;
@@ -179,9 +209,17 @@ class Character {
       reductionDamageTotal,
     };
   }
+  /** 添加战斗记录 */
   addBattleRecord(record) {
+    record.numStr =
+      record.recordType === Character.RecordType.DAMAGE
+        ? `-${record.damage}`
+        : `+${record.restoreHp}`;
     this.currProps.recordList.push(record);
     this.gameEvent.emit("record", record);
+  }
+  on(event, handle) {
+    this.gameEvent.on(event, handle);
   }
   /** 攻击 */
   attack(enemy) {
@@ -206,7 +244,7 @@ class Character {
       damageType: Character.DamageType.ATTACK,
       damage,
     });
-    enemy.enemy.currProps.hp -= damage;
+    enemy.currProps.hp -= damage;
     reboundDamages.forEach((el) => {
       enemy.causeDamage(this, el);
     });
@@ -283,10 +321,20 @@ Character.create = function (skillNum) {
 };
 Character.RecordType = {
   DAMAGE: 1,
+  RESTORE_HP: 2,
 };
 Character.DamageType = {
   ATTACK: 1,
   SKILL: 2,
 };
+Character.PropKeyList = [
+  "hp",
+  "maxHp",
+  "atk",
+  "cir",
+  "dodge",
+  "cirRate",
+  "atkSpeed",
+];
 
 export default Character;

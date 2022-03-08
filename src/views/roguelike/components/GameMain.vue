@@ -2,10 +2,6 @@
   <div class="game-main">
     <div class="cave-info">
       <span>{{ cave }}</span>
-      <hp-bar
-        :curr="(enemy && enemy.currProps && enemy.currProps.hp) || 0"
-        :max="(enemy && enemy.currProps && enemy.currProps.maxHp) || 0"
-      />
       <span>{{ (time / 1000).toFixed(2) }}</span>
     </div>
     <div class="info">
@@ -23,7 +19,12 @@
           {{ status === "battle" ? enemy.currProps.dodge : enemy.dodge }}
         </span>
       </dl>
+      <num-disappear ref="enemyNumDisappear" />
     </div>
+    <hp-bar
+      :curr="(enemy && enemy.currProps && enemy.currProps.hp) || 0"
+      :max="(enemy && enemy.currProps && enemy.currProps.maxHp) || 0"
+    />
     <skill-options
       :skills="skillOptions"
       v-model="skillOptionVisible"
@@ -37,14 +38,6 @@
     >
       战斗
     </el-button>
-    <hp-bar
-      :curr="
-        (player && player.currProps && player.currProps.hp) || player.hp || 0
-      "
-      :max="
-        (player && player.currProps && player.currProps.maxHp) || player.hp || 0
-      "
-    />
     <div class="info">
       <dl>
         <label for="">攻击</label>
@@ -64,7 +57,16 @@
           {{ status === "battle" ? player.currProps.dodge : player.dodge }}
         </span>
       </dl>
+      <num-disappear ref="playerNumDisappear" />
     </div>
+    <hp-bar
+      :curr="
+        (player && player.currProps && player.currProps.hp) || player.hp || 0
+      "
+      :max="
+        (player && player.currProps && player.currProps.maxHp) || player.hp || 0
+      "
+    />
     <el-button type="primary" size="default" @click="backMenu">
       菜单
     </el-button>
@@ -73,10 +75,11 @@
 <script>
 import Charater from "../class/Character";
 import HpBar from "./HpBar.vue";
+import NumDisappear from "./NumDisappear.vue";
 import SkillOptions from "./SkillOptions.vue";
 
 export default {
-  components: { HpBar, SkillOptions },
+  components: { HpBar, SkillOptions, NumDisappear },
   name: "GameMain",
   data() {
     return {
@@ -91,14 +94,21 @@ export default {
       sto: null,
     };
   },
-  caveReset() {
-    this.showSkillOptions();
-    this.cave++;
-    this.time = 0;
-  },
   methods: {
+    caveReset() {
+      this.showSkillOptions();
+      this.cave++;
+      this.time = 0;
+    },
     createEnemy() {
       this.enemy = Charater.create(1);
+      this.enemy.on("record", (record) => {
+        this.$refs.enemyNumDisappear.addNum({
+          num: record.numStr,
+          color:
+            record.recordType === Charater.RecordType.DAMAGE ? "blue" : "green",
+        });
+      });
     },
     createBattlefield() {
       this.player.createBattleProps(this.enemy);
@@ -169,6 +179,15 @@ export default {
     this.createEnemy();
     this.showSkillOptions();
   },
+  mounted() {
+    this.player.on("record", (record) => {
+      this.$refs.playerNumDisappear.addNum({
+        num: record.numStr,
+        color:
+          record.recordType === Charater.RecordType.DAMAGE ? "blue" : "green",
+      });
+    });
+  },
 };
 </script>
 <style lang="scss" scoped>
@@ -176,12 +195,23 @@ export default {
   .cave-info {
     display: flex;
     padding: 10px 0;
+    position: relative;
     & > span {
       text-align: center;
       width: 20%;
     }
     .hp-bar {
       width: 60%;
+    }
+  }
+  .info {
+    position: relative;
+    .num-disappear {
+      position: absolute;
+      width: 50%;
+      height: 100%;
+      top: 0;
+      left: 25%;
     }
   }
 }
