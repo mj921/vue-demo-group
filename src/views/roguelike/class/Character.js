@@ -4,6 +4,7 @@ import {
   TriggerType,
   TargetType,
   EffectType,
+  ValueType,
 } from "../data/skillData";
 import { executeCondition, parseCondition } from "./ExpressionUtil";
 import GameEvent from "./GameEvent";
@@ -125,8 +126,27 @@ class Character {
         break;
     }
   }
+  getCurrProp(key) {
+    return this.currProps[key];
+  }
   /** 回复血量 */
-  restoreHp(hp) {
+  restoreHp({
+    restoreHp = 0,
+    lv = 1,
+    valueType = ValueType.FIXED_VALUE,
+    percentageProp = "maxHp",
+  }) {
+    let hp = 0;
+    switch (valueType) {
+      case ValueType.FIXED_VALUE:
+        hp = restoreHp * lv;
+        break;
+      case ValueType.PERCENTAGE:
+        hp = Math.floor(
+          ((restoreHp * lv) / 100) * this.getCurrProp(percentageProp)
+        );
+        break;
+    }
     this.addBattleRecord({
       recordType: Character.RecordType.RESTORE_HP,
       restoreHp: hp,
@@ -156,7 +176,7 @@ class Character {
             this.triggerPropEffect(enemy, effect);
             break;
           case EffectType.RESTORE_HP:
-            this.restoreHp(effect.restoreHp * effect.lv);
+            this.restoreHp(effect);
             break;
           case EffectType.CONDITION_RESTORE_HP:
             if (executeCondition(this.currProps, effect.condition)) {

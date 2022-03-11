@@ -36,6 +36,12 @@ export const EffectType = {
   /** 概率减伤 */
   PROBABILITY_REDUCTION_DAMAGE: 8,
 };
+export const ValueType = {
+  /** 固定值 */
+  FIXED_VALUE: 1,
+  /** 百分比 */
+  PERCENTAGE: 2,
+};
 export const TargetType = {
   /** 自身  */
   SELF: 1,
@@ -61,6 +67,7 @@ export const skillData = [
         triggerType: TriggerType.OBTAIN,
         effectType: EffectType.PROP,
         targetType: TargetType.SELF,
+        valueType: ValueType.FIXED_VALUE,
         propKey: "atk",
         propNum: 3,
         propType: TargetType.SELF,
@@ -81,6 +88,7 @@ export const skillData = [
         triggerType: TriggerType.TIME_ONCE,
         effectType: EffectType.PROP,
         targetType: TargetType.SELF,
+        valueType: ValueType.FIXED_VALUE,
         propKey: "atk",
         propNum: 6,
         triggerTime: 0,
@@ -89,6 +97,7 @@ export const skillData = [
         triggerType: TriggerType.TIME_ONCE,
         effectType: EffectType.PROP,
         targetType: TargetType.SELF,
+        valueType: ValueType.FIXED_VALUE,
         propKey: "atk",
         propNum: -6,
         triggerTime: 2000,
@@ -109,6 +118,7 @@ export const skillData = [
         triggerType: TriggerType.TIME_INTERVAL,
         effectType: EffectType.PROP,
         targetType: TargetType.SELF,
+        valueType: ValueType.FIXED_VALUE,
         propKey: "atk",
         propNum: 1,
         intervalTime: 1000,
@@ -129,6 +139,7 @@ export const skillData = [
         triggerType: TriggerType.UNDER_ATTACK,
         effectType: EffectType.PROBABILITY_DAMAGE,
         targetType: TargetType.ENEMY,
+        valueType: ValueType.FIXED_VALUE,
         damage: 7,
         probability: 30,
       },
@@ -149,6 +160,7 @@ export const skillData = [
         triggerType: TriggerType.UNDER_ATTACK,
         effectType: EffectType.PROBABILITY_REDUCTION_DAMAGE,
         targetType: TargetType.SELF,
+        valueType: ValueType.FIXED_VALUE,
         reductionDamage: 3,
         probability: 30,
       },
@@ -169,6 +181,7 @@ export const skillData = [
         triggerType: TriggerType.TIME_INTERVAL,
         effectType: EffectType.RESTORE_HP,
         targetType: TargetType.SELF,
+        valueType: ValueType.FIXED_VALUE,
         restoreHp: 30,
         intervalTime: 1000,
       },
@@ -177,7 +190,7 @@ export const skillData = [
     desc: function () {
       const { lv = 1 } = this;
       const { restoreHp } = this.effects[0];
-      return `每秒回复${lv * restoreHp}点血量`;
+      return `每秒回复${lv * restoreHp}点生命值`;
     },
   },
   {
@@ -189,6 +202,7 @@ export const skillData = [
         triggerType: TriggerType.TIME_INTERVAL,
         effectType: EffectType.CONDITION_RESTORE_HP,
         targetType: TargetType.SELF,
+        valueType: ValueType.FIXED_VALUE,
         restoreHp: 42,
         intervalTime: 1000,
         condition: "(hp/maxHp)>0.5",
@@ -198,7 +212,29 @@ export const skillData = [
     desc: function () {
       const { lv = 1 } = this;
       const { restoreHp } = this.effects[0];
-      return `当生命值大于50%时，每秒回复${lv * restoreHp}点血量`;
+      return `当生命值大于50%时，每秒回复${lv * restoreHp}点生命值`;
+    },
+  },
+  {
+    id: 8,
+    name: "",
+    skillType: SkillType.BATTLE_TRIGGER,
+    effects: [
+      {
+        triggerType: TriggerType.TIME_INTERVAL,
+        effectType: EffectType.RESTORE_HP,
+        targetType: TargetType.SELF,
+        valueType: ValueType.PERCENTAGE,
+        percentageProp: "maxHp",
+        restoreHp: 1,
+        intervalTime: 1000,
+      },
+    ],
+    maxLv: 0,
+    desc: function () {
+      const { lv = 1 } = this;
+      const { restoreHp } = this.effects[0];
+      return `每秒回复${restoreHp * lv}%最大生命值`;
     },
   },
 ];
