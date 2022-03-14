@@ -814,6 +814,9 @@ export default {
   }
 }
 .tip-drawer {
+  left: auto;
+  width: 450px;
+  overflow: initial;
   /deep/ {
     .el-drawer {
       max-width: 100%;
