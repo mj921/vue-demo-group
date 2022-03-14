@@ -237,4 +237,26 @@ export const skillData = [
       return `每秒回复${restoreHp * lv}%最大生命值`;
     },
   },
+  {
+    id: 9,
+    name: "",
+    skillType: SkillType.BATTLE_TRIGGER,
+    effects: [
+      {
+        triggerType: TriggerType.OBTAIN,
+        effectType: EffectType.PROP,
+        targetType: TargetType.SELF,
+        valueType: ValueType.PERCENTAGE,
+        propKey: "hp",
+        percentageProp: "hp_T",
+        propNum: 10,
+      },
+    ],
+    maxLv: 0,
+    desc: function () {
+      const { lv = 1 } = this;
+      const { propNum } = this.effects[0];
+      return `战斗开始增加${propNum * lv}%最大生命值`;
+    },
+  },
 ];

@@ -46,6 +46,7 @@ export default {
   display: flex;
   padding: 20px;
   background-color: #fefee3;
+  flex-wrap: wrap;
   .skill-option {
     width: 30%;
     border: 1px solid;

@@ -33,42 +33,58 @@ class Character {
     this.currProps = {};
     this.gameEvent = new GameEvent();
   }
+  dealBattleStartEffectTrigger(effect, lv, currProps) {
+    switch (effect.targetType) {
+      case TargetType.SELF:
+        currProps[effect.propKey] += this.getEffectValue(
+          effect.valueType,
+          effect.propNum * lv,
+          effect.percentageProp
+        );
+        break;
+    }
+  }
   /** 处理战斗技能 */
   dealBattleSkills(skill, currProps) {
-    skill.effects.forEach((effect) => {
+    const { lv, effects, id: skillId } = skill;
+    effects.forEach((effect) => {
+      const { triggerType, condition } = effect;
       let obj = {};
-      switch (effect.triggerType) {
+      switch (triggerType) {
+        case TriggerType.OBTAIN:
+          this.dealBattleStartEffectTrigger(effect, lv, currProps);
+          break;
         case TriggerType.TIME_ONCE:
           obj = {
             ...effect,
-            lv: skill.lv,
-            skillId: skill.id,
+            lv,
+            skillId,
           };
-          if (effect.condition) {
-            obj.condition = parseCondition(effect.condition);
+          if (condition) {
+            obj.condition = parseCondition(condition);
           }
           currProps.onceEffects.push(obj);
           break;
         case TriggerType.TIME_INTERVAL:
           obj = {
             ...effect,
-            lv: skill.lv,
+            lv,
             timeProcess: 0,
-            skillId: skill.id,
+            skillId,
           };
-          if (effect.condition) {
-            obj.condition = parseCondition(effect.condition);
+          if (condition) {
+            obj.condition = parseCondition(condition);
           }
           currProps.intervalEffects.push(obj);
           break;
         case TriggerType.UNDER_ATTACK:
           obj = {
             ...effect,
-            lv: skill.lv,
-            skillId: skill.id,
+            lv,
+            skillId,
           };
-          if (effect.condition) {
-            obj.condition = parseCondition(effect.condition);
+          if (condition) {
+            obj.condition = parseCondition(condition);
           }
           currProps.underAttackEffects.push(obj);
           break;
@@ -119,15 +135,37 @@ class Character {
   triggerPropEffect(enemy, effect) {
     switch (effect.targetType) {
       case TargetType.SELF:
-        this.currProps[effect.propKey] += effect.propNum * effect.lv;
+        this.currProps[effect.propKey] += this.getEffectValue(
+          effect.valueType,
+          effect.propNum * effect.lv,
+          effect.percentageProp
+        );
         break;
       case TargetType.ENEMY:
-        enemy.currProps[effect.propKey] += effect.propNum * effect.lv;
+        enemy.currProps[effect.propKey] += this.getEffectValue(
+          effect.valueType,
+          effect.propNum * effect.lv,
+          effect.percentageProp
+        );
         break;
     }
   }
   getCurrProp(key) {
-    return this.currProps[key];
+    const keys = key.split("_");
+    if (keys[1] === "T") {
+      return this[keys[0]];
+    } else if (!keys[1]) {
+      return this.currProps[key];
+    }
+  }
+  /** 获取计算后的效果值 */
+  getEffectValue(valueType, value, percentageProp) {
+    switch (valueType) {
+      case ValueType.FIXED_VALUE:
+        return value;
+      case ValueType.PERCENTAGE:
+        return Math.floor((value / 100) * this.getCurrProp(percentageProp));
+    }
   }
   /** 回复血量 */
   restoreHp({
@@ -136,33 +174,34 @@ class Character {
     valueType = ValueType.FIXED_VALUE,
     percentageProp = "maxHp",
   }) {
-    let hp = 0;
-    switch (valueType) {
-      case ValueType.FIXED_VALUE:
-        hp = restoreHp * lv;
-        break;
-      case ValueType.PERCENTAGE:
-        hp = Math.floor(
-          ((restoreHp * lv) / 100) * this.getCurrProp(percentageProp)
-        );
-        break;
-    }
+    let hp = this.getEffectValue(valueType, restoreHp * lv, percentageProp);
     this.addBattleRecord({
       recordType: Character.RecordType.RESTORE_HP,
       restoreHp: hp,
     });
     this.currProps.hp = Math.min(this.currProps.maxHp, this.currProps.hp + hp);
   }
+  dealEffectTrigger(effect, enemy) {
+    switch (effect.effectType) {
+      case EffectType.PROP:
+        this.triggerPropEffect(enemy, effect);
+        break;
+      case EffectType.RESTORE_HP:
+        this.restoreHp(effect);
+        break;
+      case EffectType.CONDITION_RESTORE_HP:
+        if (executeCondition(this.currProps, effect.condition)) {
+          this.restoreHp(effect.restoreHp * effect.lv);
+        }
+        break;
+    }
+  }
   /** 触发效果 */
   triggerEffect(enemy, time, loopTime) {
     for (let i = 0; i < this.currProps.onceEffects.length; ) {
       const effect = this.currProps.onceEffects[i];
       if (effect.triggerTime <= time) {
-        switch (effect.effectType) {
-          case EffectType.PROP:
-            this.triggerPropEffect(enemy, effect);
-            break;
-        }
+        this.dealEffectTrigger(effect, enemy);
         this.currProps.onceEffects.splice(i, 1);
       } else {
         i++;
@@ -171,19 +210,7 @@ class Character {
     this.currProps.intervalEffects.forEach((effect) => {
       effect.timeProcess += loopTime;
       if (effect.intervalTime <= effect.timeProcess) {
-        switch (effect.effectType) {
-          case EffectType.PROP:
-            this.triggerPropEffect(enemy, effect);
-            break;
-          case EffectType.RESTORE_HP:
-            this.restoreHp(effect);
-            break;
-          case EffectType.CONDITION_RESTORE_HP:
-            if (executeCondition(this.currProps, effect.condition)) {
-              this.restoreHp(effect.restoreHp * effect.lv);
-            }
-            break;
-        }
+        this.dealEffectTrigger(effect, enemy);
         effect.timeProcess -= effect.intervalTime;
       }
     });
@@ -319,7 +346,10 @@ class Character {
     this.obtainSkill(skills[Math.floor(Math.random() * skills.length)]);
   }
   /** 随机3个技能选项 */
-  getSkillOptions(optionNum = 3) {
+  getSkillOptions(optionNum = 3, allSkill = false) {
+    if (allSkill) {
+      return skillData;
+    }
     const skills = skillData.filter(
       (skill) => !this.excludeSkillIds.includes(skill.id)
     );

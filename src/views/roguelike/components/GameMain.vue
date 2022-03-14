@@ -2,6 +2,13 @@
   <div class="game-main">
     <div class="cave-info">
       <span>{{ cave }}</span>
+      <el-switch
+        v-model="testFlag"
+        :disabled="status !== 'selectOption'"
+        @change="showSkillOptions"
+        >测试
+      </el-switch>
+
       <span>{{ (time / 1000).toFixed(2) }}</span>
     </div>
     <div class="info">
@@ -92,6 +99,7 @@ export default {
       status: "selectOption",
       loopTime: 50,
       sto: null,
+      testFlag: false,
     };
   },
   methods: {
@@ -122,7 +130,7 @@ export default {
     },
     showSkillOptions() {
       this.status = "selectOption";
-      this.skillOptions = this.player.getSkillOptions();
+      this.skillOptions = this.player.getSkillOptions(3, this.testFlag);
       this.skillOptionVisible = true;
     },
     selectSkill(skill) {
