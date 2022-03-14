@@ -113,11 +113,12 @@
       </dl>
     </div>
     <div class="cy-bottom"></div>
-    <el-dialog
+    <el-drawer
       title="统计"
       :visible.sync="statisticsVisible"
-      width="600px"
-      class="statistics-dialog"
+      class="statistics-drawer"
+      size="100%"
+      direction="ttb"
     >
       <div class="statistics">
         <dl>
@@ -181,13 +182,14 @@
           <span class="bar-text">{{ history.guessNumMap[guessNumKey] }}</span>
         </dl>
       </div>
-    </el-dialog>
-    <el-dialog
+    </el-drawer>
+    <el-drawer
       title="提示"
       :visible.sync="tipVisible"
-      width="500px"
-      top="6vh"
-      class="tip-dialog"
+      size="450px"
+      class="tip-drawer"
+      :modal="false"
+      :wrapper-closable="false"
     >
       <div class="tip-content">
         <div class="tip-list">
@@ -228,13 +230,14 @@
         </div>
         <el-button type="text" @click="moreTipVisible = true">更多</el-button>
       </div>
-    </el-dialog>
-    <el-dialog
+    </el-drawer>
+    <el-drawer
       title="更多提示"
       :visible.sync="moreTipVisible"
-      width="500px"
-      top="6vh"
-      class="tip-dialog"
+      size="450px"
+      class="tip-drawer"
+      :modal="false"
+      :wrapper-closable="false"
     >
       <div class="tip-content">
         <ul class="tip-pinyin-list">
@@ -271,7 +274,7 @@
           </li>
         </ul>
       </div>
-    </el-dialog>
+    </el-drawer>
   </div>
 </template>
 
@@ -772,13 +775,17 @@ export default {
     }
   }
 }
-.statistics-dialog {
+.statistics-drawer {
   /deep/ {
-    .el-dialog {
-      max-width: 95%;
+    .el-drawer__header {
+      margin-bottom: 0;
+      padding: 10px 20px;
+      font-size: 20px;
+      font-weight: bold;
     }
-    .el-dialog__body {
-      padding-top: 0;
+    .el-drawer__body {
+      padding: 0 10px;
+      font-size: 18px;
     }
   }
   .statistics {
@@ -806,13 +813,16 @@ export default {
     }
   }
 }
-.tip-dialog {
+.tip-drawer {
   /deep/ {
-    .el-dialog {
-      max-width: 95%;
+    .el-drawer {
+      max-width: 100%;
     }
-    .el-dialog__body {
-      padding-top: 0;
+    .el-drawer__header {
+      margin-bottom: 0;
+    }
+    .el-drawer__body {
+      padding: 0 10px;
     }
   }
   .tip-content {
