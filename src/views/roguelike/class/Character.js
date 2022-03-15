@@ -34,13 +34,23 @@ class Character {
     this.gameEvent = new GameEvent();
   }
   dealBattleStartEffectTrigger(effect, lv, currProps) {
-    switch (effect.targetType) {
+    const {
+      targetType,
+      propKey,
+      valueType,
+      propNum,
+      percentageProp,
+      formula,
+    } = effect;
+    switch (targetType) {
       case TargetType.SELF:
-        currProps[effect.propKey] += this.getEffectValue(
-          effect.valueType,
-          effect.propNum * lv,
-          effect.percentageProp
-        );
+        currProps[propKey] += this.getEffectValue({
+          valueType,
+          value: propNum * lv,
+          percentageProp,
+          props: currProps,
+          formula,
+        });
         break;
     }
   }
@@ -48,7 +58,7 @@ class Character {
   dealBattleSkills(skill, currProps) {
     const { lv, effects, id: skillId } = skill;
     effects.forEach((effect) => {
-      const { triggerType, condition } = effect;
+      const { triggerType, condition, formula } = effect;
       let obj = {};
       switch (triggerType) {
         case TriggerType.OBTAIN:
@@ -85,6 +95,9 @@ class Character {
           };
           if (condition) {
             obj.condition = parseCondition(condition);
+          }
+          if (formula) {
+            obj.formula = parseCondition(formula);
           }
           currProps.underAttackEffects.push(obj);
           break;
@@ -133,20 +146,33 @@ class Character {
   }
   /** 触发属性效果 */
   triggerPropEffect(enemy, effect) {
-    switch (effect.targetType) {
+    const {
+      targetType,
+      propKey,
+      valueType,
+      lv,
+      propNum,
+      percentageProp,
+      formula,
+    } = effect;
+    switch (targetType) {
       case TargetType.SELF:
-        this.currProps[effect.propKey] += this.getEffectValue(
-          effect.valueType,
-          effect.propNum * effect.lv,
-          effect.percentageProp
-        );
+        this.currProps[propKey] += this.getEffectValue({
+          valueType,
+          value: propNum * lv,
+          percentageProp,
+          props: this.currProps,
+          formula,
+        });
         break;
       case TargetType.ENEMY:
-        enemy.currProps[effect.propKey] += this.getEffectValue(
-          effect.valueType,
-          effect.propNum * effect.lv,
-          effect.percentageProp
-        );
+        enemy.currProps[propKey] += this.getEffectValue({
+          valueType,
+          value: propNum * lv,
+          percentageProp,
+          props: enemy.currProps,
+          formula,
+        });
         break;
     }
   }
@@ -159,12 +185,14 @@ class Character {
     }
   }
   /** 获取计算后的效果值 */
-  getEffectValue(valueType, value, percentageProp) {
+  getEffectValue({ valueType, value, percentageProp, props, formula }) {
     switch (valueType) {
       case ValueType.FIXED_VALUE:
         return value;
       case ValueType.PERCENTAGE:
         return Math.floor((value / 100) * this.getCurrProp(percentageProp));
+      case ValueType.FORMULA:
+        return value * Math.floor(executeCondition(props, formula));
     }
   }
   /** 回复血量 */
@@ -173,8 +201,16 @@ class Character {
     lv = 1,
     valueType = ValueType.FIXED_VALUE,
     percentageProp = "maxHp",
+    props = this.currProps,
+    formula,
   }) {
-    let hp = this.getEffectValue(valueType, restoreHp * lv, percentageProp);
+    let hp = this.getEffectValue({
+      valueType,
+      value: restoreHp * lv,
+      percentageProp,
+      props,
+      formula,
+    });
     this.addBattleRecord({
       recordType: Character.RecordType.RESTORE_HP,
       restoreHp: hp,
@@ -231,6 +267,9 @@ class Character {
         probability,
         reductionDamage,
         skillId,
+        valueType,
+        percentageProp,
+        formula,
       } = effect;
       switch (effectType) {
         case EffectType.DAMAGE:
@@ -242,7 +281,13 @@ class Character {
           }
           break;
         case EffectType.REDUCTION_DAMAGE:
-          reductionDamageTotal += reductionDamage * lv;
+          reductionDamageTotal += this.getEffectValue({
+            valueType,
+            value: reductionDamage * lv,
+            percentageProp,
+            props: this.currProps,
+            formula,
+          });
           break;
         case EffectType.PROBABILITY_REDUCTION_DAMAGE:
           if (Math.random() * 100 < probability) {

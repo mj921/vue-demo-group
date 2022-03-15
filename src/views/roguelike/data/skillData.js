@@ -41,6 +41,8 @@ export const ValueType = {
   FIXED_VALUE: 1,
   /** 百分比 */
   PERCENTAGE: 2,
+  /** 公式 */
+  FORMULA: 3,
 };
 export const TargetType = {
   /** 自身  */
@@ -205,7 +207,7 @@ export const skillData = [
         valueType: ValueType.FIXED_VALUE,
         restoreHp: 42,
         intervalTime: 1000,
-        condition: "(hp/maxHp)>0.5",
+        condition: "(hp/maxHp)>0.5", // 条件
       },
     ],
     maxLv: 0,
@@ -226,8 +228,8 @@ export const skillData = [
         targetType: TargetType.SELF,
         valueType: ValueType.PERCENTAGE,
         percentageProp: "maxHp",
-        restoreHp: 1,
-        intervalTime: 1000,
+        restoreHp: 1, // 回复生命值
+        intervalTime: 1000, // 间隔毫秒数
       },
     ],
     maxLv: 0,
@@ -248,7 +250,7 @@ export const skillData = [
         targetType: TargetType.SELF,
         valueType: ValueType.PERCENTAGE,
         propKey: "hp",
-        percentageProp: "hp_T",
+        percentageProp: "hp_T", // 百分比属性
         propNum: 10,
       },
     ],
@@ -257,6 +259,27 @@ export const skillData = [
       const { lv = 1 } = this;
       const { propNum } = this.effects[0];
       return `战斗开始增加${propNum * lv}%最大生命值`;
+    },
+  },
+  {
+    id: 10,
+    name: "",
+    skillType: SkillType.BATTLE_TRIGGER,
+    effects: [
+      {
+        triggerType: TriggerType.UNDER_ATTACK,
+        effectType: EffectType.REDUCTION_DAMAGE,
+        targetType: TargetType.SELF,
+        valueType: ValueType.FORMULA,
+        reductionDamage: 1, // 减免伤害
+        formula: "hp/300", // 公式
+      },
+    ],
+    maxLv: 0,
+    desc: function () {
+      const { lv = 1 } = this;
+      const { reductionDamage } = this.effects[0];
+      return `每有300点生命值减免${lv * reductionDamage}点伤害`;
     },
   },
 ];
