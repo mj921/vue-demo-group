@@ -162,6 +162,7 @@
           >{{ guessNumMoreVisible ? "收起" : "展开" }}</el-button
         >
         <dl
+          class="stat-bar"
           v-for="guessNumKey in Object.keys(history.guessNumMap)"
           :key="`guessNumKey-${guessNumKey}`"
           v-show="guessNumMoreVisible || +guessNumKey < 11"
@@ -177,9 +178,10 @@
                   (history.guessNumMap[guessNumKey] / maxGuessNumVolumn) * 100
                 }%`,
               }"
-            ></div>
+            >
+              {{ history.guessNumMap[guessNumKey] }}
+            </div>
           </div>
-          <span class="bar-text">{{ history.guessNumMap[guessNumKey] }}</span>
         </dl>
       </div>
     </el-drawer>
@@ -791,14 +793,22 @@ export default {
   .statistics {
     .bar-text {
       width: 8%;
+      font-size: 20px;
+      line-height: 1em;
     }
     .bar-bg {
-      height: 10px;
+      height: 20px;
       width: 75%;
       margin: 0 16px;
       .bar-curr {
         height: 100%;
         background-color: #38a169;
+        color: #fff;
+        text-align: right;
+        box-sizing: border-box;
+        padding-right: 10px;
+        line-height: 20px;
+        font-size: 14px;
       }
     }
     dl {
@@ -809,6 +819,9 @@ export default {
         width: 6em;
         text-align: right;
         margin-right: 1em;
+      }
+      &.stat-bar {
+        margin-bottom: 5px;
       }
     }
   }

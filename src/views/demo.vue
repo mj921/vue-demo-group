@@ -1,24 +1,20 @@
+<!-- eslint-disable no-dupe-keys -->
 <template>
   <div>
     <el-button type="primary" size="default" @click="add">添加</el-button>
-    <!-- <list-set-child-demo :list="list" /> -->
-    <el-input v-model="obj.a.name" @blur="blur(obj.a)"></el-input
-    >{{ obj.a.name1 }}
-    <el-input v-model="list[0].name" @blur="blur(list[0])"></el-input
-    >{{ list[0].name1 }}
-    <button
-      @click="
-        c1;
-        c2;
-      "
-    >
-      aa
-    </button>
+    <el-button type="primary" size="default" @click="aa.a1.a3">添加</el-button>
   </div>
 </template>
-
+<!-- eslint-disable no-dupe-keys -->
 <script>
 // import listSetChildDemo from "../components/listSetChildDemo.vue";
+const aa = (f) => ({
+  a1: {
+    a2: 1,
+    a3: f,
+  },
+});
+
 export default {
   // components: { listSetChildDemo },
   data() {
@@ -37,15 +33,13 @@ export default {
           date: "",
         },
       },
+      n: 0,
+      aa: aa(this.add),
     };
   },
   methods: {
     add() {
-      this.list.push({
-        key: Math.random(),
-        name: "",
-        date: "",
-      });
+      this.n++;
     },
     blur(item) {
       this.$set(item, "name1", item.name);
@@ -55,6 +49,14 @@ export default {
     },
     c2() {
       console.log("c2");
+    },
+  },
+  watch: {
+    n() {
+      console.log("n11");
+    },
+    n() {
+      console.log("n22");
     },
   },
 };
