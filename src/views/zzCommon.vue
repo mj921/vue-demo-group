@@ -127,9 +127,22 @@ export default {
         no = +no;
       }
     } else {
-      no = 0;
+      no = (Math.random() * zzCommon.length) | 0;
     }
-    const zz = zzCommon[no] || zzCommon.find((item) => item.code === no);
+    let zz = zzCommon[no] || zzCommon.find((item) => item.code === no);
+    if (!zz) {
+      no = (Math.random() * zzCommon.length) | 0;
+      zz = zzCommon[no];
+    }
+    if (`${this.$route.query.no}` !== `${no}`) {
+      this.$router.replace({
+        path: this.$route.path,
+        query: {
+          ...this.$route.query,
+          no,
+        },
+      });
+    }
     const code = zz.code || no;
     const rowLength = (zz.heng.length + 1) / 2;
     const colLength = zz.zuoxie.length + 1 - rowLength;

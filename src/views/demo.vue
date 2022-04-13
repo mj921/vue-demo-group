@@ -1,12 +1,14 @@
 <!-- eslint-disable no-dupe-keys -->
 <template>
   <div>
-    <el-button type="primary" size="default" @click="add">添加</el-button>
+    <el-button type="primary" size="default" @click="aaaaa">添加</el-button>
     <el-button type="primary" size="default" @click="aa.a1.a3">添加</el-button>
+    <hello-world :obj="objData" />
   </div>
 </template>
 <!-- eslint-disable no-dupe-keys -->
 <script>
+import HelloWorld from "../components/HelloWorld.vue";
 // import listSetChildDemo from "../components/listSetChildDemo.vue";
 const aa = (f) => ({
   a1: {
@@ -16,6 +18,7 @@ const aa = (f) => ({
 });
 
 export default {
+  components: { HelloWorld },
   // components: { listSetChildDemo },
   data() {
     return {
@@ -35,6 +38,14 @@ export default {
       },
       n: 0,
       aa: aa(this.add),
+      objData: [
+        {
+          name: [1, 2, 3],
+        },
+        {
+          name: [4, 5, 6],
+        },
+      ],
     };
   },
   methods: {
@@ -49,6 +60,13 @@ export default {
     },
     c2() {
       console.log("c2");
+    },
+    aaaaa() {
+      this.objData = [
+        {
+          name: ["zhejiang", "hangzhou", "xihu"],
+        },
+      ];
     },
   },
   watch: {
