@@ -1,130 +1,197 @@
 <template>
-  <div class="hello">
-    <h1>{{ msg }}</h1>
-    <p>
-      For a guide and recipes on how to configure / customize this project,<br />
-      check out the
-      <a href="https://cli.vuejs.org" target="_blank" rel="noopener"
-        >vue-cli documentation</a
-      >.
-    </p>
-    <h3>Installed CLI Plugins</h3>
-    <ul>
-      <li>
-        <a
-          href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-babel"
-          target="_blank"
-          rel="noopener"
-          >babel</a
+  <div>
+    <el-table :data="[{}]" size="small" border ref="insureTable">
+      <el-table-column
+        prop="rowLabel"
+        label="与投保人关系"
+        width="180"
+        fixed="left"
+        align="center"
+      >
+        <template v-slot>
+          <div>222</div>
+        </template>
+      </el-table-column>
+      <el-table-column
+        v-for="(item, index) in forms"
+        :key="index"
+        width="280"
+        align="center"
+      >
+        <template slot="header">
+          <span>{{ 111 }}</span>
+        </template>
+        <template v-slot>
+          <el-form
+            :model="item"
+            :ref="'formRefArea' + index"
+            class="table-form"
+          >
+            <el-form-item
+              prop="name"
+              :rules="[
+                {
+                  required: true,
+                  message: '请选择所在地区',
+                },
+              ]"
+              class="birthday-item"
+            >
+              <el-cascader
+                v-model="item.name"
+                clearable
+                :props="props"
+                @change="nameChange"
+              >
+              </el-cascader>
+            </el-form-item>
+          </el-form>
+        </template>
+      </el-table-column>
+    </el-table>
+    <!-- <el-form
+      v-for="(form, index) in forms"
+      :key="index"
+      :model="form"
+      ref="form"
+      :rules="rules"
+      label-width="80px"
+      :inline="false"
+      size="normal"
+    >
+      <el-form-item label="" prop="name">
+        <el-cascader
+          :options="options"
+          v-model="form.name"
+          clearable
+          filterable
+          :show-all-levels="false"
+          :props="{
+            checkStrictly: true,
+          }"
+          @change="nameChange"
         >
-      </li>
-      <li>
-        <a
-          href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-router"
-          target="_blank"
-          rel="noopener"
-          >router</a
-        >
-      </li>
-      <li>
-        <a
-          href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-vuex"
-          target="_blank"
-          rel="noopener"
-          >vuex</a
-        >
-      </li>
-      <li>
-        <a
-          href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-eslint"
-          target="_blank"
-          rel="noopener"
-          >eslint</a
-        >
-      </li>
-    </ul>
-    <h3>Essential Links</h3>
-    <ul>
-      <li>
-        <a href="https://vuejs.org" target="_blank" rel="noopener">Core Docs</a>
-      </li>
-      <li>
-        <a href="https://forum.vuejs.org" target="_blank" rel="noopener"
-          >Forum</a
-        >
-      </li>
-      <li>
-        <a href="https://chat.vuejs.org" target="_blank" rel="noopener"
-          >Community Chat</a
-        >
-      </li>
-      <li>
-        <a href="https://twitter.com/vuejs" target="_blank" rel="noopener"
-          >Twitter</a
-        >
-      </li>
-      <li>
-        <a href="https://news.vuejs.org" target="_blank" rel="noopener">News</a>
-      </li>
-    </ul>
-    <h3>Ecosystem</h3>
-    <ul>
-      <li>
-        <a href="https://router.vuejs.org" target="_blank" rel="noopener"
-          >vue-router</a
-        >
-      </li>
-      <li>
-        <a href="https://vuex.vuejs.org" target="_blank" rel="noopener">vuex</a>
-      </li>
-      <li>
-        <a
-          href="https://github.com/vuejs/vue-devtools#vue-devtools"
-          target="_blank"
-          rel="noopener"
-          >vue-devtools</a
-        >
-      </li>
-      <li>
-        <a href="https://vue-loader.vuejs.org" target="_blank" rel="noopener"
-          >vue-loader</a
-        >
-      </li>
-      <li>
-        <a
-          href="https://github.com/vuejs/awesome-vue"
-          target="_blank"
-          rel="noopener"
-          >awesome-vue</a
-        >
-      </li>
-    </ul>
+        </el-cascader>
+      </el-form-item>
+    </el-form> -->
   </div>
 </template>
-
 <script>
 export default {
   name: "HelloWorld",
   props: {
-    msg: String,
+    obj: Array,
+  },
+  data() {
+    return {
+      forms: [],
+      rules: {
+        name: [
+          {
+            required: true,
+            message: "请输入名称",
+            trigger: "change",
+          },
+        ],
+      },
+      options: [
+        {
+          value: 1,
+          label: "Zhejiang",
+          children: [
+            {
+              value: 2,
+              label: "Hangzhou",
+              children: [
+                {
+                  value: 3,
+                  label: "West Lake",
+                },
+              ],
+            },
+          ],
+        },
+        {
+          value: 4,
+          label: "Jiangsu",
+          children: [
+            {
+              value: 5,
+              label: "Nanjing",
+              children: [
+                {
+                  value: 6,
+                  label: "Zhong Hua Men",
+                },
+              ],
+            },
+          ],
+        },
+      ],
+      props: {
+        checkStrictly: true,
+        lazy: true,
+        lazyLoad(node, resolve) {
+          const { level } = node;
+          let data = [];
+          if (level === 0) {
+            data = [
+              {
+                value: 1,
+                label: 1,
+                leaf: false,
+              },
+            ];
+          }
+          if (level === 1) {
+            data = [
+              {
+                value: 2,
+                label: 2,
+                leaf: false,
+              },
+            ];
+          }
+          if (level === 2) {
+            data = [
+              {
+                value: 3,
+                label: 3,
+                leaf: true,
+              },
+            ];
+          }
+          setTimeout(() => {
+            resolve(data);
+          }, 1000);
+        },
+      },
+    };
+  },
+  watch: {
+    obj: {
+      handler(val) {
+        this.forms = val;
+      },
+      deep: true,
+      immediate: true,
+    },
+  },
+  methods: {
+    nameChange(val) {
+      console.log(val);
+    },
+    onSubmit() {
+      this.$refs.form.validate((valid) => {
+        if (valid) {
+          console.log("submit!");
+        } else {
+          console.log("error submit!");
+          return false;
+        }
+      });
+    },
   },
 };
 </script>
-
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped lang="scss">
-h3 {
-  margin: 40px 0 0;
-}
-ul {
-  list-style-type: none;
-  padding: 0;
-}
-li {
-  display: inline-block;
-  margin: 0 10px;
-}
-a {
-  color: #42b983;
-}
-</style>
+<style lang="scss" scoped></style>
