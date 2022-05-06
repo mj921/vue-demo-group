@@ -12,8 +12,12 @@ export const parseCondition = (condition) => {
       case "(":
         cursor = i + 1;
         stack = [];
+        if (stackList.length === 0) {
+          conditions.push(stack);
+        } else {
+          stackList[stackList.length - 1].push(stack);
+        }
         stackList.push(stack);
-        conditions.push(stack);
         break;
       case "|":
       case "&":
@@ -44,6 +48,7 @@ export const parseCondition = (condition) => {
         stackList[stackList.length - 1].push(s);
         cursor = i + 1;
         stackList.pop();
+        stack = stackList[stackList.length - 1];
         break;
     }
   }
