@@ -1,0 +1,1 @@
+[{"origin":["火","火"],"result":"能量"},{"origin":["火","水"],"result":"蒸汽"},{"origin":["火","土"],"result":"熔岩"},{"origin":["土","能量"],"result":"地震"},{"origin":["水","土"],"result":"泥"},{"origin":["火","空气"],"result":"烟"},{"origin":["水","空气"],"result":"迷雾"},{"origin":["水","水"],"result":"水坑"},{"origin":["水","水坑"],"result":"池塘"},{"origin":["水","池塘"],"result":"湖"}]

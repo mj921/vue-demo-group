@@ -184,6 +184,18 @@ const routes = [
       import(/* webpackChunkName: "treeImg" */ "../views/treeImg.vue"),
   },
   {
+    path: "/dspSeed",
+    name: "dspSeed",
+    component: () =>
+      import(/* webpackChunkName: "dspSeed" */ "../views/dspSeed/index.vue"),
+  },
+  {
+    path: "/creation",
+    name: "creation",
+    component: () =>
+      import(/* webpackChunkName: "creation" */ "../views/creation/index.vue"),
+  },
+  {
     path: "/about",
     name: "About",
     // route level code-splitting
