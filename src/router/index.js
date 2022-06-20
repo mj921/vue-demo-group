@@ -196,6 +196,22 @@ const routes = [
       import(/* webpackChunkName: "creation" */ "../views/creation/index.vue"),
   },
   {
+    path: "/jiyinxuanz",
+    name: "jiyinxuanz",
+    component: () =>
+      import(
+        /* webpackChunkName: "jiyinxuanz" */ "../views/jiyinxuanz/index.vue"
+      ),
+  },
+  {
+    path: "/randomCreate",
+    name: "randomCreate",
+    component: () =>
+      import(
+        /* webpackChunkName: "randomCreate" */ "../views/randomCreate/index.vue"
+      ),
+  },
+  {
     path: "/about",
     name: "About",
     // route level code-splitting
