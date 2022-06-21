@@ -6380,10 +6380,10 @@ node-sass@^4.12.0:
     stdout-stream "^1.4.0"
     "true-case-path" "^1.0.2"
 
-nodejieba@^2.2.1:
-  version "2.6.0"
-  resolved "https://registry.yarnpkg.com/nodejieba/-/nodejieba-2.6.0.tgz#f56dd4f0660cd294af0e2834f9008ef92dfe36c0"
-  integrity sha512-cyEOLRGLjDuxbTuv6nuMAK3NpML4ft9i7st98TFHvXtg+m3RFhIuf4INBHGp3VhUaqPsCTfAkhHB/ZNTFiwJjg==
+nodejieba@2.5.2:
+  version "2.5.2"
+  resolved "https://registry.yarnpkg.com/nodejieba/-/nodejieba-2.5.2.tgz#fc929ee29f93c28c639696bac0319bac116a296a"
+  integrity sha512-ByskJvaBrQ2eV+5M0OeD80S5NKoGaHc9zi3Z/PTKl/95eac2YF8RmWduq9AknLpkQLrLAIcqurrtC6BzjpKwwg==
   dependencies:
     "@mapbox/node-pre-gyp" "^1.0.4"
     node-addon-api "^3.0.2"
@@ -6975,15 +6975,15 @@ pinkie@^2.0.0:
   resolved "https://registry.npm.taobao.org/pinkie/download/pinkie-2.0.4.tgz#72556b80cfa0d48a974e80e77248e80ed4f7f870"
   integrity sha1-clVrgM+g1IqXToDnckjoDtT3+HA=
 
-pinyin@^2.10.2:
-  version "2.10.2"
-  resolved "https://registry.yarnpkg.com/pinyin/-/pinyin-2.10.2.tgz#93e3b3cb4430009925163bad10c741778c85b013"
-  integrity sha512-qAcp7+2vnjm6sAd0B9pp5JpyvHbYoQO1v9zCeJQMEgyw2VeRi02l0gR22ZBgfjjvZ1c2EGoVjJHJ1h0rwr34Ug==
+pinyin@^2.11.2:
+  version "2.11.2"
+  resolved "https://registry.yarnpkg.com/pinyin/-/pinyin-2.11.2.tgz#0d8afa8d79332d6ecd2c59fffba011e69d7cfb2f"
+  integrity sha512-tAWDBcowj09j/vLUjty98nVqrbTVNhutf1VcyID4p0sxTFPzRyXw7n7Ic0HQwBdWFIWrrDP8bYiT64gaT6h3gA==
   dependencies:
     commander "~1.1.1"
     object-assign "^4.0.1"
   optionalDependencies:
-    nodejieba "^2.2.1"
+    nodejieba "2.5.2"
 
 pkg-dir@^1.0.0:
   version "1.0.0"

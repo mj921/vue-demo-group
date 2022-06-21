@@ -10,6 +10,9 @@
       <el-button type="primary" size="small" @click="combinationVisible = true">
         新增组合
       </el-button>
+      <el-button type="primary" size="small" @click="goodsSearchVisible = true">
+        物品查询
+      </el-button>
     </div>
     <el-dialog title="新增分类" :visible.sync="categoryVisible" width="300px">
       <div>
@@ -89,6 +92,7 @@
       >
         <el-form-item label="">
           <el-checkbox v-model="onlyShowNullRecord">只展示无记录</el-checkbox>
+          <el-checkbox v-model="finallyShow">展示最终</el-checkbox>
         </el-form-item>
         <el-form-item label="原材料1" prop="origin1">
           <el-select
@@ -97,7 +101,9 @@
             @change="origin1Change"
           >
             <el-option
-              v-for="item in goodsList"
+              v-for="item in finallyShow
+                ? goodsList
+                : goodsList.filter((el) => el.prop !== '最终')"
               :key="item.name"
               :label="item.name"
               :value="item.name"
@@ -109,11 +115,10 @@
           <el-select
             v-model="combinationForm.origin2"
             :disabled="!combinationForm.origin1"
+            filterable
           >
             <el-option
-              v-for="item in onlyShowNullRecord
-                ? goodCombinationList.filter((el) => el.status === '没记录')
-                : goodCombinationList"
+              v-for="item in originList2"
               :key="item.goods"
               :label="item.goods"
               :value="item.goods"
@@ -123,11 +128,11 @@
                 <span
                   :style="{
                     color:
-                      item.status === '有产物'
-                        ? 'red'
-                        : item.status === '无产物'
+                      item.status === '无产物'
                         ? '#b1b6b1'
-                        : '#000',
+                        : item.status === '没记录'
+                        ? '#000'
+                        : 'red',
                   }"
                   >{{ item.status }}</span
                 >
@@ -156,6 +161,52 @@
         </el-button>
       </span>
     </el-dialog>
+    <el-drawer
+      custom-class="good-search"
+      title="物品查询"
+      :visible.sync="goodsSearchVisible"
+      size="600px"
+    >
+      <div>
+        <el-select
+          v-model="goodsSearch"
+          filterable
+          @change="goodsCombinationSearch"
+        >
+          <el-option
+            v-for="item in goodsList"
+            :key="item.name"
+            :label="item.name"
+            :value="item.name"
+          >
+          </el-option>
+        </el-select>
+        <el-tabs v-model="goodsSearchTab" type="card" tab-position="top">
+          <el-tab-pane label="原料" name="原料">
+            <div>共{{ originCombinationList.length }}种</div>
+            <ul>
+              <li
+                v-for="item in originCombinationList"
+                :key="`${item.origin.join('+')}=${item.result}`"
+              >
+                {{ item.origin.join(" + ") }} = {{ item.result }}
+              </li>
+            </ul>
+          </el-tab-pane>
+          <el-tab-pane label="产物" name="产物">
+            <div>共{{ resultCombinationList.length }}种</div>
+            <ul>
+              <li
+                v-for="item in resultCombinationList"
+                :key="`${item.origin.join('+')}=${item.result}`"
+              >
+                {{ item.origin.join(" + ") }} = {{ item.result }}
+              </li>
+            </ul>
+          </el-tab-pane>
+        </el-tabs>
+      </div>
+    </el-drawer>
   </div>
 </template>
 <script>
@@ -168,6 +219,7 @@ export default {
       categoryVisible: false,
       goodsVisible: false,
       combinationVisible: false,
+      goodsSearchVisible: false,
       newCategory: "",
       propList: ["基础", "普通", "最终"],
       categoryList: [],
@@ -186,13 +238,7 @@ export default {
             trigger: "blur",
           },
         ],
-        category: [
-          {
-            required: true,
-            message: "请选择物品分类",
-            trigger: "change",
-          },
-        ],
+        category: [],
         prop: [
           {
             required: true,
@@ -223,7 +269,24 @@ export default {
         ],
       },
       onlyShowNullRecord: false,
+      finallyShow: false,
+      goodsSearchTab: "原料",
+      goodsSearch: "",
+      originCombinationList: [],
+      resultCombinationList: [],
     };
+  },
+  computed: {
+    originList2() {
+      const list = this.onlyShowNullRecord
+        ? this.goodCombinationList.filter((el) => el.status === "没记录")
+        : this.goodCombinationList;
+      const list1 = this.finallyShow
+        ? list
+        : list.filter((el) => el.prop !== "最终");
+      list1.sort((a, b) => (a.py > b.py ? 1 : -1));
+      return list1;
+    },
   },
   methods: {
     getCategoryList() {
@@ -263,15 +326,18 @@ export default {
       this.goodsForm = {
         name: "",
         category: "",
-        prop: "",
+        prop: "普通",
       };
     },
     combinationOpened() {
       this.$refs.combinationForm.clearValidate();
+      if (this.combinationForm.origin1) {
+        this.getGoodsCombinationStatus(this.combinationForm.origin1);
+      }
     },
     combinationClosed() {
       this.combinationForm = {
-        origin1: "",
+        origin1: this.combinationForm.origin1,
         origin2: "",
         result: "",
       };
@@ -303,7 +369,7 @@ export default {
       if (!goods) return;
       axios({
         method: "get",
-        url: "/api/creation/goods/combination",
+        url: "/api/creation/goods/combinationStatus",
         params: {
           goods,
         },
@@ -313,7 +379,8 @@ export default {
         for (let key in data) {
           arr.push({
             goods: key,
-            status: data[key],
+            status: data[key].status,
+            py: data[key].py,
           });
         }
         this.goodCombinationList = arr;
@@ -344,6 +411,19 @@ export default {
         }
       });
     },
+    goodsCombinationSearch() {
+      axios
+        .get("/api/creation/goods/combination", {
+          params: {
+            goods: this.goodsSearch,
+          },
+        })
+        .then((res) => {
+          const data = res.data.data || {};
+          this.originCombinationList = data.originCombinationList || [];
+          this.resultCombinationList = data.resultCombinationList || [];
+        });
+    },
   },
   created() {
     this.getCategoryList();
@@ -359,6 +439,19 @@ export default {
   .origin2-option {
     display: flex;
     justify-content: space-between;
+  }
+  .el-drawer__wrapper {
+    /deep/ {
+      .el-drawer__header {
+        margin-bottom: 20px;
+      }
+      .el-drawer__body {
+        padding: 0 20px;
+        .el-select {
+          margin-bottom: 10px;
+        }
+      }
+    }
   }
 }
 </style>
