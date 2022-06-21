@@ -204,6 +204,69 @@
               </li>
             </ul>
           </el-tab-pane>
+          <el-tab-pane label="详情" name="详情">
+            <div>共发现{{ goodsCombinationDetail.total }}种</div>
+            <div>可组合{{ goodsCombinationDetail.hasCombination }}种</div>
+            <div>
+              组合率
+              {{
+                goodsCombinationDetail.total
+                  ? (
+                      (goodsCombinationDetail.hasCombination /
+                        goodsCombinationDetail.total) *
+                      100
+                    ).toFixed(5)
+                  : 0
+              }}%
+            </div>
+            <div>不能组合{{ goodsCombinationDetail.notCombination }}种</div>
+            <div>
+              不能组合率
+              {{
+                goodsCombinationDetail.total
+                  ? (
+                      (goodsCombinationDetail.notCombination /
+                        goodsCombinationDetail.total) *
+                      100
+                    ).toFixed(5)
+                  : 0
+              }}%
+            </div>
+            <div>
+              未尝试{{
+                goodsCombinationDetail.total -
+                goodsCombinationDetail.hasCombination -
+                goodsCombinationDetail.notCombination
+              }}种
+            </div>
+            <div>
+              未尝试率
+              {{
+                goodsCombinationDetail.total
+                  ? (
+                      ((goodsCombinationDetail.total -
+                        goodsCombinationDetail.hasCombination -
+                        goodsCombinationDetail.notCombination) /
+                        goodsCombinationDetail.total) *
+                      100
+                    ).toFixed(5)
+                  : 0
+              }}%
+            </div>
+            <div>
+              尝试率
+              {{
+                goodsCombinationDetail.total
+                  ? (
+                      ((goodsCombinationDetail.hasCombination +
+                        goodsCombinationDetail.notCombination) /
+                        goodsCombinationDetail.total) *
+                      100
+                    ).toFixed(5)
+                  : 0
+              }}%
+            </div>
+          </el-tab-pane>
         </el-tabs>
       </div>
     </el-drawer>
@@ -274,6 +337,11 @@ export default {
       goodsSearch: "",
       originCombinationList: [],
       resultCombinationList: [],
+      goodsCombinationDetail: {
+        total: 0,
+        hasCombination: 0,
+        notCombination: 0,
+      },
     };
   },
   computed: {
@@ -422,6 +490,29 @@ export default {
           const data = res.data.data || {};
           this.originCombinationList = data.originCombinationList || [];
           this.resultCombinationList = data.resultCombinationList || [];
+        });
+      axios
+        .get("/api/creation/goods/combinationStatus", {
+          params: {
+            goods: this.goodsSearch,
+          },
+        })
+        .then((res) => {
+          const data = res.data.data || {};
+          const detail = {
+            total: 0,
+            hasCombination: 0,
+            notCombination: 0,
+          };
+          for (let key in data) {
+            detail.total++;
+            if (data[key].status === "无产物") {
+              detail.notCombination++;
+            } else if (data[key].status !== "没记录") {
+              detail.hasCombination++;
+            }
+          }
+          this.goodsCombinationDetail = detail;
         });
     },
   },

@@ -129,7 +129,7 @@ module.exports = {
           data: combinationStatus,
         });
       });
-      // 查询物品与其他物品的组合状态
+      // 查询物品组合详情
       app.get("/api/creation/goods/combination", (req, res) => {
         const combinationData = require("./localData/creation/combination.json");
         let goods = req.query.goods;
