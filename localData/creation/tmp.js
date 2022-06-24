@@ -1,17 +1,11 @@
-const data = require("./combinationNotResult.json");
-const pinyin = require("pinyin");
+const goods = require("./goods.json");
 const fs = require("fs");
-const a = [];
-const arr = data.filter((item) => {
-  const n = `${item.origin.join("+")}=${item.result}`;
-  if (!a.includes(n)) {
-    a.push(n);
-    return true;
-  }
-  return false;
+const pinyin = require("pinyin");
+
+goods.forEach((el) => {
+  el.py = pinyin(el.name, {
+    style: pinyin.STYLE_NORMAL,
+  }).join(" ");
 });
 
-fs.writeFileSync(
-  "./localData/creation/combinationNotResult.json",
-  JSON.stringify(arr)
-);
+fs.writeFileSync("./localData/creation/goods1.json", JSON.stringify(goods));

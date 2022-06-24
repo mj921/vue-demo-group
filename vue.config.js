@@ -19,6 +19,27 @@ module.exports = {
           data,
         });
       });
+      // 分类物品查询
+      app.get("/api/creation/category/goods", (req, res) => {
+        const category = require("./localData/creation/category.json");
+        const goods = require("./localData/creation/goods.json");
+        const map = category.reduce((o, el) => {
+          o[el] = {
+            name: el,
+            children: [],
+          };
+          return o;
+        }, {});
+        goods.forEach((el) => {
+          (el.category || []).forEach((item) => {
+            map[item] && map[item].children.push(el.name);
+          });
+        });
+        res.json({
+          success: true,
+          data: map,
+        });
+      });
       // 添加分类
       app.post("/api/creation/category", (req, res) => {
         const category = req.body.category;
@@ -157,48 +178,82 @@ module.exports = {
           const hasResultData = require("./localData/creation/combination.json");
           const notResultData = require("./localData/creation/combinationNotResult.json");
           const data = [...hasResultData, ...notResultData];
-          if (
-            origin1 === origin2
-              ? data.find(
-                  (el) =>
-                    el.origin.includes(origin1) && el.origin[0] === el.origin[1]
-                )
-              : data.find(
-                  (el) =>
-                    el.origin.includes(origin1) && el.origin.includes(origin2)
-                )
-          ) {
+          const check = (o1, o2) => {
+            if (
+              o1 === o2
+                ? data.find(
+                    (el) =>
+                      el.origin.includes(o1) && el.origin[0] === el.origin[1]
+                  )
+                : data.find(
+                    (el) => el.origin.includes(o1) && el.origin.includes(o2)
+                  )
+            ) {
+              return false;
+            } else {
+              if (result) {
+                hasResultData.push({
+                  origin: [o1, o2],
+                  result,
+                });
+
+                fs.writeFileSync(
+                  "./localData/creation/combination.json",
+                  JSON.stringify(hasResultData)
+                );
+              } else {
+                notResultData.push({
+                  origin: [o1, o2],
+                  result,
+                });
+                fs.writeFileSync(
+                  "./localData/creation/combinationNotResult.json",
+                  JSON.stringify(notResultData)
+                );
+              }
+              return true;
+            }
+          };
+          if (typeof origin2 === "string") {
+            const flag = check(origin1, origin2);
+
+            res.json({
+              success: flag,
+              data: flag,
+              message: flag ? "添加成功" : "组合已存在",
+            });
+          } else if (origin2.length === 0) {
             res.json({
               success: false,
               data: false,
-              message: "组合已存在",
+              message: "原料不能为空",
             });
           } else {
-            if (result) {
-              hasResultData.push({
-                origin: [origin1, origin2],
-                result,
-              });
-
-              fs.writeFileSync(
-                "./localData/creation/combination.json",
-                JSON.stringify(hasResultData)
-              );
-            } else {
-              notResultData.push({
-                origin: [origin1, origin2],
-                result,
-              });
-              fs.writeFileSync(
-                "./localData/creation/combinationNotResult.json",
-                JSON.stringify(notResultData)
-              );
-            }
-            res.json({
-              success: true,
-              data: true,
-              message: "添加成功",
+            let successNum = 0;
+            origin2.map((el) => {
+              if (check(origin1, el)) {
+                successNum++;
+              }
             });
+            if (successNum === 0) {
+              res.json({
+                success: false,
+                data: false,
+                message: "组合已存在",
+              });
+            } else if (successNum === origin2.length) {
+              res.json({
+                success: true,
+                data: true,
+                message: "添加成功",
+              });
+            } else {
+              res.json({
+                success: true,
+                data: true,
+                message: "部分添加成功",
+              });
+            }
           }
         } else {
           res.json({

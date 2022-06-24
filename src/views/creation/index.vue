@@ -13,6 +13,13 @@
       <el-button type="primary" size="small" @click="goodsSearchVisible = true">
         物品查询
       </el-button>
+      <el-button
+        type="primary"
+        size="small"
+        @click="goodsCategoryVisible = true"
+      >
+        物品分类
+      </el-button>
     </div>
     <el-dialog title="新增分类" :visible.sync="categoryVisible" width="300px">
       <div>
@@ -116,6 +123,7 @@
             v-model="combinationForm.origin2"
             :disabled="!combinationForm.origin1"
             filterable
+            multiple
           >
             <el-option
               v-for="item in originList2"
@@ -143,7 +151,7 @@
         <el-form-item label="产物" prop="result">
           <el-select v-model="combinationForm.result" filterable>
             <el-option
-              v-for="item in goodsList"
+              v-for="item in [...goodsList].reverse()"
               :key="item.name"
               :label="item.name"
               :value="item.name"
@@ -162,7 +170,7 @@
       </span>
     </el-dialog>
     <el-drawer
-      custom-class="good-search"
+      custom-class="goods-search"
       title="物品查询"
       :visible.sync="goodsSearchVisible"
       size="600px"
@@ -270,6 +278,29 @@
         </el-tabs>
       </div>
     </el-drawer>
+    <el-drawer
+      custom-class="goods-category"
+      title="物品分类"
+      :visible.sync="goodsCategoryVisible"
+      size="1200px"
+      @open="getGoodsCategory"
+    >
+      <el-tabs v-model="goodsCategoryTab" tab-position="top">
+        <el-tab-pane
+          v-for="item in goodsCategory"
+          :key="item.name"
+          :label="`${item.name}(${item.children.length})`"
+          :name="item.name"
+        >
+          <div>共{{ item.children.length }}种</div>
+          <ul>
+            <li v-for="el in item.children" :key="`${item.name}-${el}`">
+              {{ el }}
+            </li>
+          </ul>
+        </el-tab-pane>
+      </el-tabs>
+    </el-drawer>
   </div>
 </template>
 <script>
@@ -283,6 +314,7 @@ export default {
       goodsVisible: false,
       combinationVisible: false,
       goodsSearchVisible: false,
+      goodsCategoryVisible: false,
       newCategory: "",
       propList: ["基础", "普通", "最终"],
       categoryList: [],
@@ -342,6 +374,8 @@ export default {
         hasCombination: 0,
         notCombination: 0,
       },
+      goodsCategory: {},
+      goodsCategoryTab: "",
     };
   },
   computed: {
@@ -514,6 +548,19 @@ export default {
           }
           this.goodsCombinationDetail = detail;
         });
+    },
+    getGoodsCategory() {
+      axios.get("/api/creation/category/goods").then((res) => {
+        const goodsCategory = res.data.data || {};
+        this.goodsCategory = Object.keys(goodsCategory).map((key) => ({
+          key,
+          ...goodsCategory[key],
+        }));
+        this.goodsCategory.sort(
+          (a, b) => b.children.length - a.children.length
+        );
+        this.goodsCategoryTab = this.goodsCategory[0].name;
+      });
     },
   },
   created() {
