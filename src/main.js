@@ -7,6 +7,9 @@ import "element-ui/lib/theme-chalk/index.css";
 import "view-design/dist/styles/iview.css";
 
 Vue.config.productionTip = false;
+// Vue.config.errorHandler = (err, vm, info) => {
+//   console.log("errorHandler", err, vm, info);
+// };
 Vue.use(ElementUi);
 // Vue.use(ViewDesign);
 

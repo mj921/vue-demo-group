@@ -212,6 +212,12 @@ const routes = [
       ),
   },
   {
+    path: "/tree/rbTree",
+    name: "rbTree",
+    component: () =>
+      import(/* webpackChunkName: "rbTree" */ "../views/tree/rbTreePage.vue"),
+  },
+  {
     path: "/about",
     name: "About",
     // route level code-splitting
