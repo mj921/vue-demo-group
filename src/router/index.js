@@ -218,6 +218,14 @@ const routes = [
       import(/* webpackChunkName: "rbTree" */ "../views/tree/rbTreePage.vue"),
   },
   {
+    path: "/videoEdit",
+    name: "videoEdit",
+    component: () =>
+      import(
+        /* webpackChunkName: "videoEdit" */ "../views/videoEdit/index.vue"
+      ),
+  },
+  {
     path: "/about",
     name: "About",
     // route level code-splitting
