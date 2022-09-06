@@ -226,6 +226,18 @@ const routes = [
       ),
   },
   {
+    path: "/cardVideoEdit",
+    name: "cardVideoEdit",
+    component: () =>
+      import(
+        /* webpackChunkName: "cardVideoEdit" */ "../views/videoEdit/cardVideoEdit.vue"
+      ),
+    meta: {
+      h5: true,
+      title: "视频",
+    },
+  },
+  {
     path: "/about",
     name: "About",
     // route level code-splitting
