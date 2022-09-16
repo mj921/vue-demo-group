@@ -25,6 +25,7 @@ const clearStore = () => import("../views/clearStore.vue");
 const roguelike = () => import("../views/roguelike/index.vue");
 const pyGuessIdioms = () => import("../views/pyGuessIdioms/index.vue");
 const pyGuessIdiomsCy = () => import("../views/pyGuessIdioms/chengyu.vue");
+const yangLeGeYang = () => import("../views/yangLeGeYang/yangLeGeYang.vue");
 
 Vue.use(VueRouter);
 
@@ -160,6 +161,15 @@ const routes = [
     },
   },
   {
+    path: "/yanglegeyang",
+    name: "yanglegeyang",
+    component: yangLeGeYang,
+    homeShow: true,
+    meta: {
+      title: "羊了个羊",
+    },
+  },
+  {
     path: "/clearStore",
     name: "clearStore",
     component: clearStore,
@@ -182,6 +192,60 @@ const routes = [
     name: "treeImg",
     component: () =>
       import(/* webpackChunkName: "treeImg" */ "../views/treeImg.vue"),
+  },
+  {
+    path: "/dspSeed",
+    name: "dspSeed",
+    component: () =>
+      import(/* webpackChunkName: "dspSeed" */ "../views/dspSeed/index.vue"),
+  },
+  {
+    path: "/creation",
+    name: "creation",
+    component: () =>
+      import(/* webpackChunkName: "creation" */ "../views/creation/index.vue"),
+  },
+  {
+    path: "/jiyinxuanz",
+    name: "jiyinxuanz",
+    component: () =>
+      import(
+        /* webpackChunkName: "jiyinxuanz" */ "../views/jiyinxuanz/index.vue"
+      ),
+  },
+  {
+    path: "/randomCreate",
+    name: "randomCreate",
+    component: () =>
+      import(
+        /* webpackChunkName: "randomCreate" */ "../views/randomCreate/index.vue"
+      ),
+  },
+  {
+    path: "/tree/rbTree",
+    name: "rbTree",
+    component: () =>
+      import(/* webpackChunkName: "rbTree" */ "../views/tree/rbTreePage.vue"),
+  },
+  {
+    path: "/videoEdit",
+    name: "videoEdit",
+    component: () =>
+      import(
+        /* webpackChunkName: "videoEdit" */ "../views/videoEdit/index.vue"
+      ),
+  },
+  {
+    path: "/cardVideoEdit",
+    name: "cardVideoEdit",
+    component: () =>
+      import(
+        /* webpackChunkName: "cardVideoEdit" */ "../views/videoEdit/cardVideoEdit.vue"
+      ),
+    meta: {
+      h5: true,
+      title: "视频",
+    },
   },
   {
     path: "/about",
