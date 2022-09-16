@@ -295,6 +295,7 @@
     <canvas ref="bgCanvas"></canvas>
   </div>
 </template>
+<!-- eslint-disable no-unused-vars -->
 <script>
 // import { createScopedThreejs } from "threejs-miniprogram";
 import * as THREE from "three";

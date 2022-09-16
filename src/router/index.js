@@ -25,6 +25,7 @@ const clearStore = () => import("../views/clearStore.vue");
 const roguelike = () => import("../views/roguelike/index.vue");
 const pyGuessIdioms = () => import("../views/pyGuessIdioms/index.vue");
 const pyGuessIdiomsCy = () => import("../views/pyGuessIdioms/chengyu.vue");
+const yangLeGeYang = () => import("../views/yangLeGeYang/yangLeGeYang.vue");
 
 Vue.use(VueRouter);
 
@@ -157,6 +158,15 @@ const routes = [
     homeShow: true,
     meta: {
       title: "拼音猜成语2",
+    },
+  },
+  {
+    path: "/yanglegeyang",
+    name: "yanglegeyang",
+    component: yangLeGeYang,
+    homeShow: true,
+    meta: {
+      title: "羊了个羊",
     },
   },
   {
