@@ -778,7 +778,7 @@ export default {
   }
 }
 .statistics-drawer {
-  /deep/ {
+  ::v-deep {
     .el-drawer__header {
       margin-bottom: 0;
       padding: 10px 20px;
@@ -830,7 +830,7 @@ export default {
   left: auto;
   width: 450px;
   overflow: initial;
-  /deep/ {
+  ::v-deep {
     .el-drawer {
       max-width: 100%;
     }

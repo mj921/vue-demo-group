@@ -579,7 +579,7 @@ export default {
     justify-content: space-between;
   }
   .el-drawer__wrapper {
-    /deep/ {
+    ::v-deep {
       .el-drawer__header {
         margin-bottom: 20px;
       }

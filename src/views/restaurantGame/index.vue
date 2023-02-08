@@ -134,9 +134,9 @@
           class="wait-progress"
           :style="{
             background: `linear-gradient(to right, #2693ff 0%, #2693ff ${
-              (queue.queueWatiTime / queueWatiTime) * 100
+              (queue.queueWaitTime / queueWaitTime) * 100
             }%, #006dd9 ${
-              (queue.queueWatiTime / queueWatiTime) * 100
+              (queue.queueWaitTime / queueWaitTime) * 100
             }%, #006dd9 100%)`,
           }"
         >
@@ -155,7 +155,7 @@
       :game-rule-data="{
         maxWaitCustomerNum,
         dayTime,
-        queueWatiTime,
+        queueWaitTime,
         cookSalary,
       }"
       @save="settingSave"
@@ -181,8 +181,8 @@ export default {
       "杨尚",
       "王振海",
     ];
-    const allCustomers = new Array(7).fill(1).map((item, index) => ({
-      name: names[index],
+    const allCustomers = names.map((name, index) => ({
+      name: name,
       img: require(`../../assets/images/restaurant/customer-icon${index}.png`),
     }));
     return {
@@ -191,7 +191,7 @@ export default {
       day: 1,
       money: 500,
       allCustomers,
-      queueWatiTime: 60000,
+      queueWaitTime: 60000,
       time: 0,
       dayTime: 240000,
       loopTime: 100,
@@ -558,16 +558,16 @@ export default {
         }
       }
       for (let i = 0; i < this.queueList.length; ) {
-        this.queueList[i].queueWatiTime += this.loopTime;
+        this.queueList[i].queueWaitTime += this.loopTime;
         if (
           !this.queueList[i].toastFlag &&
-          this.queueList[i].queueWatiTime > this.queueWatiTime / 2 &&
+          this.queueList[i].queueWaitTime > this.queueWaitTime / 2 &&
           this.seatList.some((el) => !el.hasCustomer)
         ) {
           this.queueList[i].toastFlag = true;
           RgToast.error("餐厅目前有空位，赶紧点击等位客人头像让客人入座就餐吧");
         }
-        if (this.queueList[i].queueWatiTime >= this.queueWatiTime) {
+        if (this.queueList[i].queueWaitTime >= this.queueWaitTime) {
           this.queueList.splice(i, 1);
         } else {
           i++;
@@ -584,7 +584,7 @@ export default {
           this.queueList.push({
             ...currCustomer,
             id: this.id++,
-            queueWatiTime: 0,
+            queueWaitTime: 0,
           });
         }
       }

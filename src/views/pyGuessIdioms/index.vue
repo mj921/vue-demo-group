@@ -544,7 +544,7 @@ export default {
   }
 }
 .rank-dialog {
-  /deep/ {
+  ::v-deep {
     .el-dialog__body {
       padding-top: 0;
     }
