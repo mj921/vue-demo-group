@@ -76,7 +76,7 @@
 
 .video-edit .video-edit-wrap .video-edit-content .video-currpage .tip-mask {
   background-color: rgba(71, 109, 255, 0.19);
-  border: .2rem dotted #476dff;
+  border: 0.2rem dotted #476dff;
 }
 
 .video-edit .video-edit-wrap .video-edit-content .video-currpage .tip-mask.tip-mask-animate {
@@ -98,7 +98,7 @@
   font-weight: bold;
   color: #ffffff;
   line-height: 6.2rem;
-  margin-bottom: .8rem;
+  margin-bottom: 0.8rem;
 }
 
 .video-edit .video-edit-wrap .video-edit-content .video-currpage .video-create-animate .video-create-text {
@@ -112,7 +112,7 @@
   width: 12.8rem;
   height: 5rem;
   border-radius: 2.5rem;
-  border: .2rem solid #ffffff;
+  border: 0.2rem solid #ffffff;
   line-height: 4.6rem;
   box-sizing: border-box;
   text-align: center;
@@ -129,25 +129,25 @@
 .video-edit .video-edit-wrap .video-edit-content .video-currpage .video-create-animate .video-create-top {
   top: 0;
   left: 0;
-  height: .8rem;
+  height: 0.8rem;
 }
 
 .video-edit .video-edit-wrap .video-edit-content .video-currpage .video-create-animate .video-create-right {
   top: 0;
   right: 0;
-  width: .8rem;
+  width: 0.8rem;
 }
 
 .video-edit .video-edit-wrap .video-edit-content .video-currpage .video-create-animate .video-create-bottom {
   bottom: 0;
   right: 0;
-  height: .8rem;
+  height: 0.8rem;
 }
 
 .video-edit .video-edit-wrap .video-edit-content .video-currpage .video-create-animate .video-create-left {
   bottom: 0;
   left: 0;
-  width: .8rem;
+  width: 0.8rem;
 }
 
 .video-edit .video-edit-wrap .video-edit-content .video-next {
@@ -205,7 +205,7 @@
   bottom: 0;
   left: 0;
   display: flex;
-  width: calc(100% - .6rem);
+  width: calc(100% - 0.6rem);
   height: 2.8rem;
   font-size: 2rem;
   color: #999999;
@@ -220,16 +220,16 @@
 
 .video-edit .video-preview .video-preview-scroll .video-preview-pages .video-preview-page-time .video-preview-page-time-line {
   flex: 1;
-  margin: 0 .8rem;
+  margin: 0 0.8rem;
   height: 0;
-  border-bottom: .3rem dashed #999999;
+  border-bottom: 0.3rem dashed #999999;
 }
 
 .video-edit .video-preview .video-preview-scroll .video-preview-pages .video-preview-page {
   width: 14.4rem;
   height: 8.1rem;
-  border-radius: .4rem;
-  border: .1rem solid #000;
+  border-radius: 0.4rem;
+  border: 0.1rem solid #000;
   overflow: hidden;
 }
 
@@ -238,7 +238,7 @@
 }
 
 .video-edit .video-preview .video-preview-scroll .video-preview-pages .video-preview-page.video-preview-page--active {
-  border: .2rem solid #476dff;
+  border: 0.2rem solid #476dff;
 }
 
 .video-edit .video-preview .video-preview-scroll .video-preview-pages .video-preview-page .video-preview-page-box {

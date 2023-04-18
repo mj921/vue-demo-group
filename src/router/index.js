@@ -1,269 +1,275 @@
-import Vue from "vue";
-import VueRouter from "vue-router";
-import { setRem } from "../util/dom";
-const Home = () => import("../views/Home.vue");
-const yz = () => import("../views/yz.vue");
-const jinhua = () => import("../views/jinhua.vue");
-const jinhua1 = () => import("../views/jinhua1.vue");
-const shengtaiquan = () => import("../views/shengtaiquan.vue");
-const xq = () => import("../views/xq.vue");
-const zz = () => import("../views/zz.vue");
-const zz1 = () => import("../views/zz1.vue");
-const zzCommon = () => import("../views/zzCommon.vue");
-const zztransform = () => import("../views/zztransform.vue");
-const shengwu = () => import("../views/shengwu.vue");
-const shengwu1 = () => import("../views/shengwu1.vue");
-const cc = () => import("../views/cc.vue");
-const zm = () => import("../views/zm.vue");
-const xiuxian = () => import("../views/xiuxian.vue");
-const pubuliu = () => import("../views/pubuliu.vue");
-const sku = () => import("../views/sku.vue");
-const x6antv = () => import("../views/x6antv.vue");
-const xiagu = () => import("../views/xiagu.vue");
-const restaurantGame = () => import("../views/restaurantGame/index.vue");
-const clearStore = () => import("../views/clearStore.vue");
-const roguelike = () => import("../views/roguelike/index.vue");
-const pyGuessIdioms = () => import("../views/pyGuessIdioms/index.vue");
-const pyGuessIdiomsCy = () => import("../views/pyGuessIdioms/chengyu.vue");
-const yangLeGeYang = () => import("../views/yangLeGeYang/yangLeGeYang.vue");
+import Vue from 'vue';
+import VueRouter from 'vue-router';
+import { setRem } from '../util/dom';
+const Home = () => import('../views/Home.vue');
+const yz = () => import('../views/yz.vue');
+const jinhua = () => import('../views/jinhua.vue');
+const jinhua1 = () => import('../views/jinhua1.vue');
+const shengtaiquan = () => import('../views/shengtaiquan.vue');
+const xq = () => import('../views/xq.vue');
+const zz = () => import('../views/zz.vue');
+const zz1 = () => import('../views/zz1.vue');
+const zzCommon = () => import('../views/zzCommon.vue');
+const zztransform = () => import('../views/zztransform.vue');
+const shengwu = () => import('../views/shengwu.vue');
+const shengwu1 = () => import('../views/shengwu1.vue');
+const cc = () => import('../views/cc.vue');
+const zm = () => import('../views/zm.vue');
+const xiuxian = () => import('../views/xiuxian.vue');
+const pubuliu = () => import('../views/pubuliu.vue');
+const sku = () => import('../views/sku.vue');
+const x6antv = () => import('../views/x6antv.vue');
+const xiagu = () => import('../views/xiagu.vue');
+const restaurantGame = () => import('../views/restaurantGame/index.vue');
+const clearStore = () => import('../views/clearStore.vue');
+const roguelike = () => import('../views/roguelike/index.vue');
+const pyGuessIdioms = () => import('../views/pyGuessIdioms/index.vue');
+const pyGuessIdiomsCy = () => import('../views/pyGuessIdioms/chengyu.vue');
+const yangLeGeYang = () => import('../views/yangLeGeYang/yangLeGeYang.vue');
 
 Vue.use(VueRouter);
 
 const routes = [
   {
-    path: "/yz",
-    name: "yz",
+    path: '/yz',
+    name: 'yz',
     component: yz,
   },
   {
-    path: "/jinhua",
-    name: "jinhua",
+    path: '/jinhua',
+    name: 'jinhua',
     component: jinhua,
   },
   {
-    path: "/jinhua1",
-    name: "jinhua1",
+    path: '/jinhua1',
+    name: 'jinhua1',
     component: jinhua1,
   },
   {
-    path: "/shengtaiquan",
-    name: "shengtaiquan",
+    path: '/shengtaiquan',
+    name: 'shengtaiquan',
     component: shengtaiquan,
   },
   {
-    path: "/xq",
-    name: "xq",
+    path: '/xq',
+    name: 'xq',
     component: xq,
   },
   {
-    path: "/zz",
-    name: "zz",
+    path: '/zz',
+    name: 'zz',
     component: zz,
     homeShow: true,
     meta: {
-      title: "正则游戏",
+      title: '正则游戏',
     },
   },
   {
-    path: "/zz1",
-    name: "zz1",
+    path: '/zz1',
+    name: 'zz1',
     component: zz1,
     homeShow: true,
     meta: {
-      title: "正则游戏2",
+      title: '正则游戏2',
     },
   },
   {
-    path: "/zzCommon",
-    name: "zzCommon",
+    path: '/zzCommon',
+    name: 'zzCommon',
     component: zzCommon,
     homeShow: true,
     meta: {
-      title: "正则游戏3",
+      title: '正则游戏3',
     },
   },
   {
-    path: "/zztransform",
-    name: "zztransform",
+    path: '/zztransform',
+    name: 'zztransform',
     component: zztransform,
   },
   {
-    path: "/shengwu",
-    name: "shengwu",
+    path: '/shengwu',
+    name: 'shengwu',
     component: shengwu,
   },
   {
-    path: "/shengwu1",
-    name: "shengwu1",
+    path: '/shengwu1',
+    name: 'shengwu1',
     component: shengwu1,
   },
   {
-    path: "/cc",
-    name: "cc",
+    path: '/cc',
+    name: 'cc',
     component: cc,
   },
   {
-    path: "/zm",
-    name: "zm",
+    path: '/zm',
+    name: 'zm',
     component: zm,
   },
   {
-    path: "/xiuxian",
-    name: "xiuxian",
+    path: '/xiuxian',
+    name: 'xiuxian',
     component: xiuxian,
   },
   {
-    path: "/xiagu",
-    name: "xiagu",
+    path: '/xiagu',
+    name: 'xiagu',
     component: xiagu,
   },
   {
-    path: "/pubuliu",
-    name: "pubuliu",
+    path: '/pubuliu',
+    name: 'pubuliu',
     component: pubuliu,
   },
   {
-    path: "/sku",
-    name: "sku",
+    path: '/sku',
+    name: 'sku',
     component: sku,
   },
   {
-    path: "/x6antv",
-    name: "x6antv",
+    path: '/x6antv',
+    name: 'x6antv',
     component: x6antv,
   },
   {
-    path: "/restaurantGame",
-    name: "restaurantGame",
+    path: '/restaurantGame',
+    name: 'restaurantGame',
     component: restaurantGame,
     homeShow: true,
     meta: {
       h5: true,
-      title: "餐厅游戏",
+      title: '餐厅游戏',
     },
   },
   {
-    path: "/caichengyu",
-    name: "caichengyu",
+    path: '/caichengyu',
+    name: 'caichengyu',
     component: pyGuessIdioms,
     homeShow: true,
     meta: {
-      title: "拼音猜成语",
+      title: '拼音猜成语',
     },
   },
   {
-    path: "/caichengyu1",
-    name: "caichengyu1",
+    path: '/caichengyu1',
+    name: 'caichengyu1',
     component: pyGuessIdiomsCy,
     homeShow: true,
     meta: {
-      title: "拼音猜成语2",
+      title: '拼音猜成语2',
     },
   },
   {
-    path: "/yanglegeyang",
-    name: "yanglegeyang",
+    path: '/yanglegeyang',
+    name: 'yanglegeyang',
     component: yangLeGeYang,
     homeShow: true,
     meta: {
-      title: "羊了个羊",
+      title: '羊了个羊',
     },
   },
   {
-    path: "/clearStore",
-    name: "clearStore",
+    path: '/clearStore',
+    name: 'clearStore',
     component: clearStore,
     homeShow: true,
     meta: {
-      title: "清缓存",
+      title: '清缓存',
     },
   },
   {
-    path: "/roguelike",
-    name: "roguelike",
+    path: '/roguelike',
+    name: 'roguelike',
     component: roguelike,
     homeShow: true,
     meta: {
-      title: "roguelike",
+      title: 'roguelike',
     },
   },
   {
-    path: "/treeImg",
-    name: "treeImg",
+    path: '/treeImg',
+    name: 'treeImg',
     component: () =>
-      import(/* webpackChunkName: "treeImg" */ "../views/treeImg.vue"),
+      import(/* webpackChunkName: "treeImg" */ '../views/treeImg.vue'),
   },
   {
-    path: "/dspSeed",
-    name: "dspSeed",
+    path: '/dspSeed',
+    name: 'dspSeed',
     component: () =>
-      import(/* webpackChunkName: "dspSeed" */ "../views/dspSeed/index.vue"),
+      import(/* webpackChunkName: "dspSeed" */ '../views/dspSeed/index.vue'),
   },
   {
-    path: "/creation",
-    name: "creation",
+    path: '/creation',
+    name: 'creation',
     component: () =>
-      import(/* webpackChunkName: "creation" */ "../views/creation/index.vue"),
+      import(/* webpackChunkName: "creation" */ '../views/creation/index.vue'),
   },
   {
-    path: "/jiyinxuanz",
-    name: "jiyinxuanz",
+    path: '/jiyinxuanz',
+    name: 'jiyinxuanz',
     component: () =>
       import(
-        /* webpackChunkName: "jiyinxuanz" */ "../views/jiyinxuanz/index.vue"
+        /* webpackChunkName: "jiyinxuanz" */ '../views/jiyinxuanz/index.vue'
       ),
   },
   {
-    path: "/randomCreate",
-    name: "randomCreate",
+    path: '/randomCreate',
+    name: 'randomCreate',
     component: () =>
       import(
-        /* webpackChunkName: "randomCreate" */ "../views/randomCreate/index.vue"
+        /* webpackChunkName: "randomCreate" */ '../views/randomCreate/index.vue'
       ),
   },
   {
-    path: "/tree/rbTree",
-    name: "rbTree",
+    path: '/zupu',
+    name: 'zupu',
     component: () =>
-      import(/* webpackChunkName: "rbTree" */ "../views/tree/rbTreePage.vue"),
+      import(/* webpackChunkName: "zupu" */ '../views/zupu/index.vue'),
   },
   {
-    path: "/videoEdit",
-    name: "videoEdit",
+    path: '/tree/rbTree',
+    name: 'rbTree',
+    component: () =>
+      import(/* webpackChunkName: "rbTree" */ '../views/tree/rbTreePage.vue'),
+  },
+  {
+    path: '/videoEdit',
+    name: 'videoEdit',
     component: () =>
       import(
-        /* webpackChunkName: "videoEdit" */ "../views/videoEdit/index.vue"
+        /* webpackChunkName: "videoEdit" */ '../views/videoEdit/index.vue'
       ),
   },
   {
-    path: "/cardVideoEdit",
-    name: "cardVideoEdit",
+    path: '/cardVideoEdit',
+    name: 'cardVideoEdit',
     component: () =>
       import(
-        /* webpackChunkName: "cardVideoEdit" */ "../views/videoEdit/cardVideoEdit.vue"
+        /* webpackChunkName: "cardVideoEdit" */ '../views/videoEdit/cardVideoEdit.vue'
       ),
     meta: {
       h5: true,
-      title: "视频",
+      title: '视频',
     },
   },
   {
-    path: "/about",
-    name: "About",
+    path: '/about',
+    name: 'About',
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
     component: () =>
-      import(/* webpackChunkName: "about" */ "../views/About.vue"),
+      import(/* webpackChunkName: "about" */ '../views/About.vue'),
   },
   {
-    path: "/demo",
-    name: "Demo",
-    component: () => import("../views/demo.vue"),
+    path: '/demo',
+    name: 'Demo',
+    component: () => import('../views/demo.vue'),
   },
   {
-    path: "/",
-    name: "Home",
+    path: '/',
+    name: 'Home',
     component: Home,
   },
 ];
@@ -275,10 +281,10 @@ const router = new VueRouter({
 router.beforeEach((to, from, next) => {
   if ((!from.meta || !from.meta.h5) && to.meta && to.meta.h5) {
     setRem();
-    window.addEventListener("resize", setRem);
+    window.addEventListener('resize', setRem);
   }
   if ((!to.meta || !to.meta.h5) && from.meta && from.meta.h5) {
-    window.removeEventListener("resize", setRem);
+    window.removeEventListener('resize', setRem);
   }
   next();
 });

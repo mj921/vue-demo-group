@@ -13,7 +13,7 @@
         :key="col.key"
       >
         <template v-if="col.key === 'jy'" v-slot="{ row }">{{
-          row.jy.join(", ")
+          row.jy.join(', ')
         }}</template>
       </el-table-column>
     </el-table>
@@ -41,153 +41,153 @@ export default {
       maxAge: 0,
       maxLv: 1,
       jy: [
-        "changshou",
-        "zaoshu",
-        "duozi",
-        "duanming",
-        "shunchan",
-        "nanchan",
-        "wanshu",
-        "jiankang",
-        "duobing",
-        "yiyun",
-        "buyun",
-        "nanyun",
-        "qiyun",
-        "meiyun",
-        "daqiyun",
-        "tiandizhizi",
-        "tiandao",
+        'changshou',
+        'zaoshu',
+        'duozi',
+        'duanming',
+        'shunchan',
+        'nanchan',
+        'wanshu',
+        'jiankang',
+        'duobing',
+        'yiyun',
+        'buyun',
+        'nanyun',
+        'qiyun',
+        'meiyun',
+        'daqiyun',
+        'tiandizhizi',
+        'tiandao',
       ],
       untubian: [],
       jyMap: {
         changshou: [
           {
-            key: "maxAge",
+            key: 'maxAge',
             value: 20,
           },
         ],
         zaoshu: [
           {
-            key: "startSy",
+            key: 'startSy',
             value: -5,
           },
         ],
         duozi: [
           {
-            key: "hdNum",
+            key: 'hdNum',
             value: 1,
           },
         ],
         buyun: [
           {
-            key: "hdNum",
+            key: 'hdNum',
             value: -1,
           },
         ],
         duanming: [
           {
-            key: "maxAge",
+            key: 'maxAge',
             value: -20,
           },
         ],
         shunchan: [
           {
-            key: "hdSuccess",
+            key: 'hdSuccess',
             value: 0.25,
           },
         ],
         nanchan: [
           {
-            key: "hdSuccess",
+            key: 'hdSuccess',
             value: -0.25,
           },
         ],
         wanshu: [
           {
-            key: "startSy",
+            key: 'startSy',
             value: 5,
           },
         ],
         jiankang: [
           {
-            key: "heatherRate",
+            key: 'heatherRate',
             value: 0.5,
           },
         ],
         duobing: [
           {
-            key: "heatherRate",
+            key: 'heatherRate',
             value: -0.5,
           },
         ],
         yiyun: [
           {
-            key: "jiange",
+            key: 'jiange',
             value: -1,
           },
         ],
         nanyun: [
           {
-            key: "jiange",
+            key: 'jiange',
             value: 1,
           },
         ],
         qiyun: [
           {
-            key: "qiyun",
+            key: 'qiyun',
             value: 25,
           },
         ],
         meiyun: [
           {
-            key: "qiyun",
+            key: 'qiyun',
             value: -25,
           },
         ],
         daqiyun: [
           {
-            key: "qiyun",
+            key: 'qiyun',
             value: 50,
           },
           {
-            key: "heatherRate",
+            key: 'heatherRate',
             value: 0.25,
           },
         ],
         tiandizhizi: [
           {
-            key: "qiyun",
+            key: 'qiyun',
             value: 100,
           },
           {
-            key: "heatherRate",
+            key: 'heatherRate',
             value: 0.5,
           },
           {
-            key: "maxAge",
+            key: 'maxAge',
             value: 20,
           },
         ],
         tiandao: [
           {
-            key: "qiyun",
+            key: 'qiyun',
             value: 200,
           },
           {
-            key: "heatherRate",
+            key: 'heatherRate',
             value: 1,
           },
           {
-            key: "maxAge",
+            key: 'maxAge',
             value: 40,
           },
           {
-            key: "hdSuccess",
+            key: 'hdSuccess',
             value: 0.35,
           },
           {
-            key: "tubian",
+            key: 'tubian',
             value: -0.09,
           },
         ],
@@ -195,31 +195,31 @@ export default {
       children: [],
       columns: [
         {
-          key: "name",
+          key: 'name',
         },
         {
-          key: "parent",
+          key: 'parent',
         },
         {
-          key: "root",
+          key: 'root',
         },
         {
-          key: "lv",
+          key: 'lv',
         },
         {
-          key: "jy",
+          key: 'jy',
         },
         {
-          key: "age",
+          key: 'age',
         },
         {
-          key: "maxAge",
+          key: 'maxAge',
         },
         {
-          key: "hdNum",
+          key: 'hdNum',
         },
         {
-          key: "currHdNum",
+          key: 'currHdNum',
         },
       ],
     };
